@@ -78,6 +78,42 @@ const tileIcon = (mark, label, accent = "#b6ff22") => {
     </svg>
   `);
 };
+const logoTile = (label, mark, accent = "#eef2ff") => {
+  const words = String(label || mark || "?").replace(/&/g, " ").split(/\s+/).filter(Boolean);
+  const firstLine = xmlEscape(words.slice(0, 2).join(" ").slice(0, 13) || mark || "?");
+  const secondLine = xmlEscape(words.slice(2, 4).join(" ").slice(0, 13));
+  const hasSecondLine = Boolean(secondLine);
+  return svgData(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="${xmlEscape(label || mark || "?")}">
+      <rect x="4" y="4" width="88" height="88" rx="18" fill="#111726" stroke="rgba(255,255,255,.14)" stroke-width="2"/>
+      <rect x="10" y="10" width="76" height="76" rx="14" fill="rgba(255,255,255,.035)"/>
+      <text x="48" y="${hasSecondLine ? 43 : 50}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Arial,sans-serif" font-size="${firstLine.length > 9 ? 12 : 15}" font-weight="900" fill="${accent}">${firstLine}</text>
+      ${hasSecondLine ? `<text x="48" y="61" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Arial,sans-serif" font-size="${secondLine.length > 9 ? 12 : 15}" font-weight="900" fill="${accent}">${secondLine}</text>` : ""}
+    </svg>
+  `);
+};
+const categoryIcon = (name, label) => {
+  const common = `fill="none" stroke="#eef2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`;
+  const icons = {
+    sneakers: `<path ${common} d="M18 58c12 2 24-1 36-11l8 9 16 4c5 1 7 5 5 10H17c-5 0-6-7 1-12Z"/><path ${common} d="M43 48l10 11M34 53l8 8"/>`,
+    tshirts: `<path ${common} d="M34 18h28l10 8 12 5-9 16-10-4v35H31V43l-10 4-9-16 12-5 10-8Z"/><path ${common} d="M39 19c3 7 15 7 18 0"/>`,
+    boots: `<path ${common} d="M32 18h22v38l21 6c7 2 10 7 8 14H26c-5 0-8-4-7-9l6-23c2-8 5-16 7-26Z"/><path ${common} d="M32 48h25M29 62h32"/>`,
+    "designer-shoes": `<path ${common} d="M18 61c16 2 31-2 45-14l11 10c6 2 10 6 8 13H18c-5 0-7-5 0-9Z"/><path ${common} d="M40 54h17"/>`,
+    jackets: `<path ${common} d="M36 17h24l14 10v50H22V27l14-10Z"/><path ${common} d="M48 22v55M34 35l-10-8M62 35l10-8"/>`,
+    hoodies: `<path ${common} d="M30 39c0-17 36-17 36 0l12 9v29H18V48l12-9Z"/><path ${common} d="M36 39c4 7 20 7 24 0M36 56v13M60 56v13"/>`,
+    "sports-sets": `<path ${common} d="M34 17h28l10 8 11 6-8 15-10-4v36H31V42l-10 4-8-15 11-6 10-8Z"/><text x="48" y="61" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="900" fill="#eef2ff">7</text>`,
+    "pants-shorts": `<path ${common} d="M30 17h36l-5 61H48l-3-34-8 34H24l6-61Z"/><path ${common} d="M31 30h34M48 18v24"/>`,
+    "designer-bags": `<rect ${common} x="24" y="35" width="48" height="42" rx="8"/><path ${common} d="M36 35c0-18 24-18 24 0"/>`,
+    "designer-watches": `<path ${common} d="M39 15h18l4 20a18 18 0 0 1 0 26l-4 20H39l-4-20a18 18 0 0 1 0-26l4-20Z"/><circle ${common} cx="48" cy="48" r="15"/>`,
+    "other-accessories": `<path ${common} d="M14 45h22l7 16h10l7-16h22"/><circle ${common} cx="27" cy="45" r="13"/><circle ${common} cx="69" cy="45" r="13"/>`,
+    electronics: `<rect ${common} x="32" y="13" width="32" height="70" rx="8"/><path ${common} d="M44 72h8"/>`
+  };
+  return svgData(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="${xmlEscape(label)}">
+      ${icons[name] || `<text x="48" y="56" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="900" fill="#eef2ff">${xmlEscape(String(label || "?").slice(0, 2).toUpperCase())}</text>`}
+    </svg>
+  `);
+};
 
 const visualCategories = {
   sneakers: { label: "Sneakers", mark: "SN", image: iconify("mdi:shoe-sneaker") },
@@ -94,8 +130,8 @@ const visualCategories = {
   electronics: { label: "Electronics", mark: "EL", image: iconify("mdi:cellphone") }
 };
 
-Object.values(visualCategories).forEach((item) => {
-  item.image = tileIcon(item.mark, item.label);
+Object.entries(visualCategories).forEach(([name, item]) => {
+  item.image = categoryIcon(name, item.label);
 });
 
 const visualAgents = {
@@ -127,8 +163,8 @@ const extraAgents = [
   ["Boonbuy", "BB", "#ff9a00", favicon("boonbuy.com")]
 ];
 
-const agentImage = (name, mark, image) => image || visualAgents[name] || tileIcon(mark, name, "#ff8c16");
-const brandImage = (brand, mark) => brandImages[brand] || tileIcon(mark, brand, "#eef2ff");
+const agentImage = (name, mark, image) => image || visualAgents[name] || logoTile(name, mark, "#ff8c16");
+const brandImage = (brand, mark) => brandImages[brand] || logoTile(brand, mark, "#eef2ff");
 
 const brandImages = {
   "Adidas": simpleIcon("adidas"),
@@ -216,7 +252,7 @@ const safeUrl = (value) => {
 
 const renderIconMark = ({ image, mark, label }) => {
   const fallback = escapeHtml(mark || String(label || "?").slice(0, 3).toUpperCase());
-  const fallbackImage = safeUrl(tileIcon(mark, label, "#b6ff22"));
+  const fallbackImage = safeUrl(logoTile(label, mark, "#eef2ff"));
   if (!image) return `<span class="icon-mark"><b>${fallback}</b></span>`;
   return `
     <span class="icon-mark image-mark">

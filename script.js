@@ -216,13 +216,27 @@ const safeUrl = (value) => {
 
 const renderIconMark = ({ image, mark, label }) => {
   const fallback = escapeHtml(mark || String(label || "?").slice(0, 3).toUpperCase());
+  const fallbackImage = safeUrl(tileIcon(mark, label, "#b6ff22"));
   if (!image) return `<span class="icon-mark"><b>${fallback}</b></span>`;
   return `
     <span class="icon-mark image-mark">
-      <img src="${escapeHtml(safeUrl(image))}" alt="" loading="lazy" decoding="async" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+      <img src="${escapeHtml(safeUrl(image))}" data-fallback-src="${escapeHtml(fallbackImage)}" alt="" loading="lazy" decoding="async" />
       <b hidden>${fallback}</b>
     </span>
   `;
+};
+
+const attachIconFallbacks = (root = document) => {
+  root.querySelectorAll(".icon-mark img[data-fallback-src]").forEach((img) => {
+    const fallbackSrc = img.dataset.fallbackSrc;
+    if (!fallbackSrc || img.dataset.fallbackReady) return;
+    img.dataset.fallbackReady = "true";
+    const useFallback = () => {
+      if (img.src !== fallbackSrc) img.src = fallbackSrc;
+    };
+    img.addEventListener("error", useFallback, { once: true });
+    if (img.complete && img.naturalWidth === 0) useFallback();
+  });
 };
 
 const compact = (value) => {
@@ -407,3 +421,4 @@ renderStats();
 renderCategories();
 renderBrands();
 renderAgents();
+attachIconFallbacks();

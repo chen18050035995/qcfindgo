@@ -3,49 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FindQCGo | QC Finder and Product Search</title>
+    <title>Streetwear QC Finder | Sneakers, Designer Brands - qcfindgo</title>
     <meta
       name="description"
-      content="FindQCGo is a dark QC search mirror for browsing product links, brands, categories, agent platforms, item IDs, prices, and QC-style product images."
+      content="qcfindgo helps US and Europe shoppers browse streetwear QC photos, sneakers, designer brands, agent links, and product discovery pages."
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#080a14" />
     <link rel="canonical" href="https://qcfindgo.com/" />
-    <link rel="stylesheet" href="styles.css?v=20260729a" />
+    <meta property="og:title" content="Streetwear QC Finder | qcfindgo" />
+    <meta property="og:description" content="Browse QC-style product photos for sneakers, streetwear apparel, designer brands, and agent-ready product finds." />
+    <meta property="og:url" content="https://qcfindgo.com/" />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="styles.css?v=20260730a" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "qcfindgo",
+        "url": "https://qcfindgo.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://qcfindgo.com/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
   </head>
   <body>
     <header class="topbar">
-      <a class="logo" href="/" aria-label="FindQCGo home">
+      <a class="logo" href="/" aria-label="qcfindgo home">
         <span>QC</span>
         <strong>qcfindgo</strong>
       </a>
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="#categories">Choose Finds</a>
+        <a href="/brands/">Brands</a>
+        <a href="/categories/">Categories</a>
+        <a href="/blog/">Guides</a>
         <a href="#search">QC Finder</a>
-        <a href="#resources">Resources</a>
       </nav>
-      <nav class="tools" aria-label="Tools">
-        <button type="button">Select platform</button>
-        <button type="button" aria-label="Cart">Cart</button>
-        <button type="button">USD</button>
-        <button type="button">Login / Register</button>
+      <nav class="tools" aria-label="Priority pages">
+        <a href="/brands/nike/">Nike</a>
+        <a href="/brands/adidas/">Adidas</a>
+        <a href="/brands/louis-vuitton/">LV</a>
+        <a href="/contact/">Contact</a>
       </nav>
     </header>
 
     <main>
       <section class="finder" id="search" aria-labelledby="finder-title">
         <div class="search-glow" aria-hidden="true"></div>
-        <h1 id="finder-title">Paste a product link, find QC-style product photos.</h1>
+        <h1 id="finder-title">Streetwear QC finder for sneakers and designer brand finds.</h1>
         <form class="search-box" id="search-form" role="search">
-          <span class="search-icon" aria-hidden="true">⌕</span>
+          <span class="search-icon" aria-hidden="true">Q</span>
           <input id="search-input" type="search" placeholder="Search brand, category, item ID, or keyword..." autocomplete="off" />
-          <button class="camera-button" type="button" title="Image search is coming soon" aria-label="Image search coming soon">▣</button>
+          <button class="camera-button" type="button" title="Image search is coming soon" aria-label="Image search coming soon">+</button>
         </form>
         <div class="mode-row" aria-label="Search modes">
           <button type="button" data-mode-search="link">Paste Link</button>
           <button type="button" data-mode-search="image" disabled>Paste / Drop Image</button>
           <button type="button" data-mode-search="name">Search Name</button>
         </div>
+        <p class="intro-copy">
+          Browse QC-style product photos, item IDs, prices, and source links for Nike, Adidas, Louis Vuitton, Dior, Gucci,
+          sneakers, designer shoes, hoodies, T-shirts, bags, and accessories.
+        </p>
         <dl class="stats" aria-label="Catalog statistics">
           <div><dt id="product-count">0</dt><dd>items</dd></div>
           <div><dt id="brand-count">0</dt><dd>brands</dd></div>
@@ -56,26 +78,56 @@
 
       <section class="matrix" id="categories" aria-labelledby="category-title">
         <div class="matrix-label active">
-          <span class="grid-icon">▦</span>
-          <strong>All Categories</strong>
+          <span class="grid-icon">#</span>
+          <strong><a href="/categories/">All Categories</a></strong>
         </div>
         <div class="icon-grid" id="category-grid"></div>
       </section>
 
       <section class="matrix" aria-labelledby="brand-title">
         <div class="matrix-label active">
-          <span class="grid-icon">▦</span>
-          <strong>All Brands</strong>
+          <span class="grid-icon">B</span>
+          <strong><a href="/brands/">All Brands</a></strong>
         </div>
         <div class="icon-grid brand-grid" id="brand-grid"></div>
       </section>
 
       <section class="matrix" id="resources" aria-labelledby="agent-title">
         <div class="matrix-label active">
-          <span class="grid-icon">▦</span>
+          <span class="grid-icon">A</span>
           <strong>All Agents</strong>
         </div>
         <div class="icon-grid agent-grid" id="agent-grid"></div>
+      </section>
+
+      <section class="seo-strip" aria-labelledby="seo-pages-title">
+        <h2 id="seo-pages-title">Popular QC finder pages</h2>
+        <div class="seo-link-grid">
+          <a href="/categories/sneakers/">Sneaker QC Finds</a>
+          <a href="/categories/hoodies/">Streetwear Hoodie QC Finds</a>
+          <a href="/brands/nike/">Nike QC Finds</a>
+          <a href="/brands/adidas/">Adidas QC Finds</a>
+          <a href="/brands/louis-vuitton/">Louis Vuitton QC Finds</a>
+          <a href="/brands/dior/">Dior QC Finds</a>
+          <a href="/brands/gucci/">Gucci QC Finds</a>
+          <a href="/blog/how-to-use-qc-photos-before-buying-streetwear/">How to Use QC Photos</a>
+        </div>
+      </section>
+
+      <section class="seo-strip" aria-labelledby="trust-title">
+        <h2 id="trust-title">QC product discovery built for US and Europe shoppers</h2>
+        <p>
+          qcfindgo organizes streetwear and designer product finds into crawlable brand, category, product, and guide pages.
+          Use it to compare QC photos, source item IDs, category fit, and agent-ready links before opening a listing.
+        </p>
+        <div class="seo-link-grid">
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/shipping/">Shipping Notes</a>
+          <a href="/returns/">Returns</a>
+          <a href="/privacy-policy/">Privacy Policy</a>
+          <a href="/terms/">Terms</a>
+        </div>
       </section>
 
       <section class="results" id="results" hidden>
@@ -88,6 +140,6 @@
     </main>
 
     <script src="products.js?v=20260728a"></script>
-    <script src="script.js?v=20260729a"></script>
+    <script src="script.js?v=20260730a"></script>
   </body>
 </html>

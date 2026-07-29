@@ -13,18 +13,18 @@ const brandCount = document.querySelector("#brand-count");
 const updatedAt = document.querySelector("#updated-at");
 
 const categoryLabels = {
-  sneakers: { label: "Sneakers", icon: "♟" },
-  tshirts: { label: "T-Shirts", icon: "♜" },
-  boots: { label: "Boots", icon: "▰" },
-  "designer-shoes": { label: "Leather Shoes", icon: "▱" },
-  jackets: { label: "Jackets", icon: "▥" },
-  hoodies: { label: "Hoodies & Sweatshirts", icon: "▧" },
-  "sports-sets": { label: "Jerseys", icon: "7" },
-  "pants-shorts": { label: "Trousers & Pants", icon: "▤" },
-  "designer-bags": { label: "Bags", icon: "▣" },
-  "designer-watches": { label: "Watches", icon: "◎" },
-  "other-accessories": { label: "Accessories", icon: "◇" },
-  electronics: { label: "Electronics", icon: "▢" }
+  sneakers: { label: "Sneakers", icon: "SH" },
+  tshirts: { label: "T-Shirts", icon: "TS" },
+  boots: { label: "Boots", icon: "BT" },
+  "designer-shoes": { label: "Designer Shoes", icon: "DS" },
+  jackets: { label: "Jackets", icon: "JK" },
+  hoodies: { label: "Hoodies & Sweatshirts", icon: "HD" },
+  "sports-sets": { label: "Jerseys", icon: "JR" },
+  "pants-shorts": { label: "Trousers & Pants", icon: "PT" },
+  "designer-bags": { label: "Bags", icon: "BG" },
+  "designer-watches": { label: "Watches", icon: "WT" },
+  "other-accessories": { label: "Accessories", icon: "AC" },
+  electronics: { label: "Electronics", icon: "EL" }
 };
 
 const categoryOrder = [
@@ -89,6 +89,25 @@ const compact = (value) => {
 
 const getBrand = (product) => String(product.brand || product.subcategory || "Other").trim();
 
+const slugify = (value) => {
+  return String(value || "item")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 90) || "item";
+};
+
+const usedSlugs = new Map();
+const getProductSlug = (product) => {
+  if (product._seoSlug) return product._seoSlug;
+  const base = slugify(`${getBrand(product)} ${product.title || "product"} ${product.sourceItemId || ""}`);
+  const used = usedSlugs.get(base) || 0;
+  usedSlugs.set(base, used + 1);
+  product._seoSlug = used ? `${base}-${used + 1}` : base;
+  return product._seoSlug;
+};
+
 const getSearchText = (product) => {
   return normalize([
     product.title,
@@ -109,6 +128,8 @@ const realProducts = products.filter((product) => {
   const image = String(product.image || "");
   return image && !image.includes("nova-finds-hero.png") && !image.includes("images.unsplash.com");
 });
+
+realProducts.forEach(getProductSlug);
 
 const renderStats = () => {
   const brands = new Set(realProducts.map(getBrand).filter((brand) => brand && brand.toLowerCase() !== "other"));
@@ -141,13 +162,13 @@ const renderCategories = () => {
     .map((category) => [category, counts.get(category)]);
 
   categoryGrid.innerHTML = entries.map(([category, count]) => {
-    const item = categoryLabels[category] || { label: category, icon: "▥" };
+    const item = categoryLabels[category] || { label: category, icon: "QC" };
     return `
-      <button class="icon-card" type="button" data-category="${escapeHtml(category)}">
+      <a class="icon-card" href="/categories/${escapeHtml(category)}/" data-category="${escapeHtml(category)}">
         <span class="icon-mark">${escapeHtml(item.icon)}</span>
         <span>${escapeHtml(item.label)}</span>
         <small>${escapeHtml(compact(count))}</small>
-      </button>
+      </a>
     `;
   }).join("");
 };
@@ -167,11 +188,11 @@ const renderBrands = () => {
   brandGrid.innerHTML = entries.map(([brand, count]) => {
     const mark = brand.split(/\s+/).map((part) => part[0]).join("").slice(0, 3).toUpperCase();
     return `
-      <button class="icon-card" type="button" data-query="${escapeHtml(brand)}">
+      <a class="icon-card" href="/brands/${escapeHtml(slugify(brand))}/" data-query="${escapeHtml(brand)}">
         <span class="icon-mark">${escapeHtml(mark)}</span>
         <span>${escapeHtml(brand)}</span>
         <small>${escapeHtml(compact(count))}</small>
-      </button>
+      </a>
     `;
   }).join("");
 };
@@ -187,22 +208,19 @@ const renderAgents = () => {
   }).join("");
 };
 
-const getProductUrl = (product) => {
-  const id = product.sourceItemId ? `?id=${encodeURIComponent(product.sourceItemId)}` : "";
-  return `https://www.novafindsgo.com/product.html${id}`;
-};
+const getProductUrl = (product) => `/products/${getProductSlug(product)}/`;
 
 const renderResults = (items, label) => {
   const shown = items.slice(0, 48);
   results.hidden = false;
-  resultTitle.textContent = `${label} · ${items.length} results`;
+  resultTitle.textContent = `${label} - ${items.length} results`;
   resultGrid.innerHTML = shown.length
     ? shown.map((product) => `
-      <a class="result-card" href="${escapeHtml(getProductUrl(product))}" target="_blank" rel="noopener noreferrer">
-        <img src="${escapeHtml(safeUrl(product.image))}" alt="${escapeHtml(product.alt || product.title || "Product")}" loading="lazy" />
+      <a class="result-card" href="${escapeHtml(getProductUrl(product))}">
+        <img src="${escapeHtml(safeUrl(product.image))}" alt="${escapeHtml(product.alt || product.title || "Product QC photos")}" loading="lazy" />
         <span class="result-info">
           <strong>${escapeHtml(product.title || "Product")}</strong>
-          <span>${escapeHtml(getBrand(product))} · ${escapeHtml(product.sourceItemId || "")}</span>
+          <span>${escapeHtml(getBrand(product))} - ${escapeHtml(product.sourceItemId || "")}</span>
         </span>
       </a>
     `).join("")
@@ -223,23 +241,11 @@ searchForm.addEventListener("submit", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  const categoryButton = event.target.closest("[data-category]");
-  if (categoryButton) {
-    const category = categoryButton.dataset.category;
-    const items = realProducts.filter((product) => {
-      const extra = Array.isArray(product.extraCategories) && product.extraCategories.some((item) => item?.category === category);
-      return product.category === category || extra;
-    });
-    renderResults(items, categoryLabels[category]?.label || category);
-    return;
-  }
+  const categoryLink = event.target.closest("[data-category]");
+  if (categoryLink && event.metaKey) return;
 
-  const queryButton = event.target.closest("[data-query]");
-  if (queryButton) {
-    searchInput.value = queryButton.dataset.query || "";
-    searchProducts(searchInput.value);
-    return;
-  }
+  const queryLink = event.target.closest("[data-query]");
+  if (queryLink && event.metaKey) return;
 
   const modeButton = event.target.closest("[data-mode-search]");
   if (modeButton && !modeButton.disabled) {

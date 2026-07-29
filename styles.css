@@ -95,7 +95,8 @@ button {
 }
 
 .main-nav a,
-.tools button {
+.tools button,
+.tools a {
   border: 0;
   background: transparent;
   color: #cfd5e2;
@@ -107,7 +108,9 @@ button {
 .main-nav a:hover,
 .main-nav a:focus-visible,
 .tools button:hover,
-.tools button:focus-visible {
+.tools button:focus-visible,
+.tools a:hover,
+.tools a:focus-visible {
   color: var(--lime);
 }
 
@@ -155,6 +158,15 @@ main {
   font-weight: 940;
   letter-spacing: 0;
   line-height: 1.12;
+}
+
+.intro-copy {
+  position: relative;
+  max-width: 760px;
+  margin: 22px 0 0;
+  color: #c5cedd;
+  font-size: 15px;
+  font-weight: 650;
 }
 
 .search-box {
@@ -312,6 +324,7 @@ main {
   border: 0;
   background: transparent;
   text-align: center;
+  text-decoration: none;
 }
 
 .icon-mark {
@@ -438,6 +451,200 @@ main {
   font-weight: 800;
 }
 
+.seo-strip,
+.seo-copy,
+.seo-hero,
+.product-detail {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.seo-strip {
+  margin-top: 26px;
+  padding: 24px;
+}
+
+.seo-strip h2,
+.seo-copy h2,
+.seo-copy h3,
+.seo-hero h1,
+.product-copy h2 {
+  margin-top: 0;
+  letter-spacing: 0;
+}
+
+.seo-strip h2,
+.seo-copy h2 {
+  margin-bottom: 12px;
+  font-size: 22px;
+}
+
+.seo-strip p,
+.seo-copy p,
+.seo-copy li,
+.product-copy p,
+.product-facts {
+  color: #c7cfdd;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.seo-link-grid,
+.seo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.seo-link-grid a,
+.seo-button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #eef4ff;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 10px 14px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.seo-link-grid a:hover,
+.seo-card:hover,
+.seo-button:hover {
+  border-color: rgba(182, 255, 34, 0.58);
+  color: var(--lime);
+}
+
+.seo-main {
+  max-width: 1240px;
+}
+
+.seo-hero {
+  margin-bottom: 22px;
+  padding: 34px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--lime);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.seo-hero h1 {
+  max-width: 860px;
+  margin-bottom: 14px;
+  font-size: clamp(34px, 5vw, 54px);
+  line-height: 1.08;
+}
+
+.seo-hero p {
+  max-width: 820px;
+  margin: 0;
+  color: #c7cfdd;
+  font-size: 17px;
+  line-height: 1.58;
+}
+
+.seo-copy {
+  margin: 18px 0;
+  padding: 24px;
+}
+
+.seo-copy a {
+  color: var(--lime);
+}
+
+.seo-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  text-decoration: none;
+}
+
+.seo-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #121827;
+}
+
+.seo-card span,
+.seo-card small {
+  display: block;
+  padding-inline: 12px;
+}
+
+.seo-card span {
+  min-height: 46px;
+  padding-top: 12px;
+  color: var(--fg);
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.seo-card small {
+  padding-bottom: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.product-detail {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) 1fr;
+  gap: 28px;
+  padding: 24px;
+}
+
+.product-media img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: #121827;
+}
+
+.product-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.product-facts div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.product-facts dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.product-facts dd {
+  margin: 4px 0 0;
+  color: var(--fg);
+  font-weight: 850;
+}
+
+.product-facts a {
+  color: var(--lime);
+}
+
 @media (max-width: 980px) {
   .topbar {
     grid-template-columns: 1fr auto;
@@ -449,7 +656,8 @@ main {
     display: none;
   }
 
-  .tools button:nth-child(n + 2) {
+  .tools button:nth-child(n + 2),
+  .tools a:nth-child(n + 2) {
     display: none;
   }
 
@@ -467,6 +675,10 @@ main {
     min-height: auto;
     justify-content: flex-start;
     text-align: left;
+  }
+
+  .product-detail {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -493,5 +705,16 @@ main {
 
   .icon-card span:last-child {
     font-size: 11px;
+  }
+
+  .seo-hero,
+  .seo-copy,
+  .seo-strip,
+  .product-detail {
+    padding: 18px;
+  }
+
+  .product-facts {
+    grid-template-columns: 1fr;
   }
 }

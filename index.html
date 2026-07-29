@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FindQCGo | QC Finder and Product Search</title>
+    <meta
+      name="description"
+      content="FindQCGo is a dark QC search mirror for browsing product links, brands, categories, agent platforms, item IDs, prices, and QC-style product images."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#080a14" />
+    <link rel="canonical" href="https://qcfindgo.com/" />
+    <link rel="stylesheet" href="styles.css?v=20260729a" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo" href="/" aria-label="FindQCGo home">
+        <span>QC</span>
+        <strong>qcfindgo</strong>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#categories">Choose Finds</a>
+        <a href="#search">QC Finder</a>
+        <a href="#resources">Resources</a>
+      </nav>
+      <nav class="tools" aria-label="Tools">
+        <button type="button">Select platform</button>
+        <button type="button" aria-label="Cart">Cart</button>
+        <button type="button">USD</button>
+        <button type="button">Login / Register</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="finder" id="search" aria-labelledby="finder-title">
+        <div class="search-glow" aria-hidden="true"></div>
+        <h1 id="finder-title">Paste a product link, find QC-style product photos.</h1>
+        <form class="search-box" id="search-form" role="search">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="search-input" type="search" placeholder="Search brand, category, item ID, or keyword..." autocomplete="off" />
+          <button class="camera-button" type="button" title="Image search is coming soon" aria-label="Image search coming soon">▣</button>
+        </form>
+        <div class="mode-row" aria-label="Search modes">
+          <button type="button" data-mode-search="link">Paste Link</button>
+          <button type="button" data-mode-search="image" disabled>Paste / Drop Image</button>
+          <button type="button" data-mode-search="name">Search Name</button>
+        </div>
+        <dl class="stats" aria-label="Catalog statistics">
+          <div><dt id="product-count">0</dt><dd>items</dd></div>
+          <div><dt id="brand-count">0</dt><dd>brands</dd></div>
+          <div><dt id="agent-count">10</dt><dd>agents</dd></div>
+          <div><dt id="updated-at">live</dt><dd>updated</dd></div>
+        </dl>
+      </section>
+
+      <section class="matrix" id="categories" aria-labelledby="category-title">
+        <div class="matrix-label active">
+          <span class="grid-icon">▦</span>
+          <strong>All Categories</strong>
+        </div>
+        <div class="icon-grid" id="category-grid"></div>
+      </section>
+
+      <section class="matrix" aria-labelledby="brand-title">
+        <div class="matrix-label active">
+          <span class="grid-icon">▦</span>
+          <strong>All Brands</strong>
+        </div>
+        <div class="icon-grid brand-grid" id="brand-grid"></div>
+      </section>
+
+      <section class="matrix" id="resources" aria-labelledby="agent-title">
+        <div class="matrix-label active">
+          <span class="grid-icon">▦</span>
+          <strong>All Agents</strong>
+        </div>
+        <div class="icon-grid agent-grid" id="agent-grid"></div>
+      </section>
+
+      <section class="results" id="results" hidden>
+        <div class="results-head">
+          <p id="result-title">Search results</p>
+          <button type="button" id="clear-results">Clear</button>
+        </div>
+        <div class="result-grid" id="result-grid"></div>
+      </section>
+    </main>
+
+    <script src="products.js?v=20260728a"></script>
+    <script src="script.js?v=20260729a"></script>
+  </body>
+</html>

@@ -383,7 +383,6 @@ main {
 .brand-grid .image-mark img {
   width: 140px;
   height: 94px;
-  filter: brightness(0) invert(1);
 }
 
 .agent-grid .image-mark img {

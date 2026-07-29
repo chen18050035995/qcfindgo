@@ -101,7 +101,7 @@ const brandWordmark = (name, text = name, size = 24, weight = 900, family = "Int
   <text x="80" y="54" text-anchor="middle" dominant-baseline="middle" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="#eef2ff">${xmlEscape(text)}</text>
 `);
 const brandIcon = (file) => `/assets/brand-icons/${file}.png`;
-const brandSvg = (file) => `/assets/brand-icons-svg/${file}.svg`;
+const brandSvg = (file) => brandIcon(file);
 const brandLogos = {
   "adidas": brandSvg("adidas"),
   "Adidas": brandSvg("adidas"),

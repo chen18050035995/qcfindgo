@@ -10,6 +10,7 @@ const resultTitle = document.querySelector("#result-title");
 const clearResults = document.querySelector("#clear-results");
 const productCount = document.querySelector("#product-count");
 const brandCount = document.querySelector("#brand-count");
+const agentCount = document.querySelector("#agent-count");
 const updatedAt = document.querySelector("#updated-at");
 
 const categoryLabels = {
@@ -57,6 +58,111 @@ const agents = [
   ["AllChinaBuy", "ACB", "#2f7fff"]
 ];
 
+const iconify = (name) => `https://api.iconify.design/${name}.svg?color=%23eef2ff`;
+const simpleIcon = (name) => `https://cdn.simpleicons.org/${name}/ffffff`;
+const favicon = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
+const visualCategories = {
+  sneakers: { label: "Sneakers", mark: "SN", image: iconify("mdi:shoe-sneaker") },
+  tshirts: { label: "T-Shirts", mark: "TS", image: iconify("mdi:tshirt-crew") },
+  boots: { label: "Boots", mark: "BT", image: iconify("game-icons:chelsea-boot") },
+  "designer-shoes": { label: "Leather Shoes", mark: "LS", image: iconify("game-icons:flat-shoe") },
+  jackets: { label: "Jackets", mark: "JK", image: iconify("game-icons:trench-body-armor") },
+  hoodies: { label: "Hoodies & Sweatshirts", mark: "HD", image: iconify("game-icons:hoodie") },
+  "sports-sets": { label: "Jerseys", mark: "7", image: iconify("game-icons:soccer-jersey") },
+  "pants-shorts": { label: "Trousers & Pants", mark: "PT", image: iconify("game-icons:trousers") },
+  "designer-bags": { label: "Bags", mark: "BG", image: iconify("mdi:bag-personal") },
+  "designer-watches": { label: "Watches", mark: "WT", image: iconify("mdi:watch") },
+  "other-accessories": { label: "Accessories", mark: "AC", image: iconify("mdi:sunglasses") },
+  electronics: { label: "Electronics", mark: "EL", image: iconify("mdi:cellphone") }
+};
+
+const visualAgents = {
+  LoongBuy: favicon("loongbuy.com"),
+  OopBuy: favicon("oopbuy.com"),
+  JoyAGoo: favicon("joyagoo.com"),
+  Lovegobuy: favicon("lovegobuy.com"),
+  Hipobuy: favicon("hipobuy.com"),
+  Mulebuy: favicon("mulebuy.com"),
+  Kakobuy: favicon("kakobuy.com"),
+  Superbuy: favicon("superbuy.com"),
+  CSSBuy: favicon("cssbuy.com"),
+  Sugargoo: favicon("sugargoo.com"),
+  Orientdig: favicon("orientdig.com"),
+  AllChinaBuy: favicon("allchinabuy.com")
+};
+
+const extraAgents = [
+  ["LitBuy", "LIT", "#ffcf00", favicon("litbuy.com")],
+  ["MyCNBox", "MCB", "#ff1717", favicon("mycnbox.com")],
+  ["RizzitGO", "R", "#b6ff00", favicon("rizzitgo.com")],
+  ["Vigorbuy", "VB", "#ff174d", favicon("vigorbuy.com")],
+  ["iTaoBuy", "ITB", "#ff7200", favicon("itaobuy.com")],
+  ["FishGoo", "FG", "#2f7fff", favicon("fishgoo.com")],
+  ["Eastmallbuy", "EM", "#ffffff", favicon("eastmallbuy.com")],
+  ["OODTBuy", "OOD", "#ff7a00", favicon("oodtbuy.com")],
+  ["OKEYHAUL", "OK", "#ff7300", favicon("okeyhaul.com")],
+  ["GTBuy", "GT", "#ff6400", favicon("gtbuy.com")],
+  ["Boonbuy", "BB", "#ff9a00", favicon("boonbuy.com")]
+];
+
+const brandImages = {
+  "Adidas": simpleIcon("adidas"),
+  "Air Jordan": simpleIcon("jumpman"),
+  "Apple": simpleIcon("apple"),
+  "Balenciaga": simpleIcon("balenciaga"),
+  "BAPE": favicon("bape.com"),
+  "Burberry": simpleIcon("burberry"),
+  "Carhartt WIP": simpleIcon("carhartt"),
+  "Cartier": simpleIcon("cartier"),
+  "Chanel": simpleIcon("chanel"),
+  "Chrome Hearts": favicon("chromehearts.com"),
+  "Corteiz": favicon("crtz.xyz"),
+  "Dior": simpleIcon("dior"),
+  "DSquared2": favicon("dsquared2.com"),
+  "Fear of God Essentials": favicon("fearofgod.com"),
+  "Fendi": simpleIcon("fendi"),
+  "Gallery Dept.": favicon("gallerydept.com"),
+  "Givenchy": simpleIcon("givenchy"),
+  "Golden Goose": favicon("goldengoose.com"),
+  "Gucci": simpleIcon("gucci"),
+  "Hellstar": favicon("hellstar.com"),
+  "Hermes": simpleIcon("hermes"),
+  "Hoka": simpleIcon("hoka"),
+  "JBL": simpleIcon("jbl"),
+  "Kenzo": favicon("kenzo.com"),
+  "Lacoste": simpleIcon("lacoste"),
+  "Lanvin": favicon("lanvin.com"),
+  "Loewe": simpleIcon("loewe"),
+  "Louis Vuitton": simpleIcon("louisvuitton"),
+  "Maison Margiela": favicon("maisonmargiela.com"),
+  "Moncler": simpleIcon("moncler"),
+  "New Balance": simpleIcon("newbalance"),
+  "Nike": simpleIcon("nike"),
+  "Off-White": simpleIcon("offwhite"),
+  "On Running": favicon("on.com"),
+  "Onitsuka Tiger": favicon("onitsukatiger.com"),
+  "Palm Angels": favicon("palmangels.com"),
+  "PlayStation": simpleIcon("playstation"),
+  "Polo Ralph Lauren": simpleIcon("ralphlauren"),
+  "Prada": simpleIcon("prada"),
+  "Rolex": simpleIcon("rolex"),
+  "Stone Island": favicon("stoneisland.com"),
+  "Stussy": simpleIcon("stussy"),
+  "Supreme": simpleIcon("supreme"),
+  "Swarovski": simpleIcon("swarovski"),
+  "The North Face": simpleIcon("thenorthface"),
+  "Tom Ford": favicon("tomford.com"),
+  "Tommy Hilfiger": simpleIcon("tommyhilfiger"),
+  "Trapstar": favicon("trapstarlondon.com"),
+  "Under Armour": simpleIcon("underarmour"),
+  "Valentino": favicon("valentino.com"),
+  "Vans": simpleIcon("vans"),
+  "Versace": favicon("versace.com"),
+  "YSL": simpleIcon("ysl"),
+  "Yamaha": simpleIcon("yamaha")
+};
+
 const normalize = (value) => {
   return String(value || "")
     .trim()
@@ -81,6 +187,17 @@ const safeUrl = (value) => {
   } catch {
     return "";
   }
+};
+
+const renderIconMark = ({ image, mark, label }) => {
+  const fallback = escapeHtml(mark || String(label || "?").slice(0, 3).toUpperCase());
+  if (!image) return `<span class="icon-mark"><b>${fallback}</b></span>`;
+  return `
+    <span class="icon-mark image-mark">
+      <img src="${escapeHtml(safeUrl(image))}" alt="" loading="lazy" decoding="async" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+      <b hidden>${fallback}</b>
+    </span>
+  `;
 };
 
 const compact = (value) => {
@@ -135,6 +252,7 @@ const renderStats = () => {
   const brands = new Set(realProducts.map(getBrand).filter((brand) => brand && brand.toLowerCase() !== "other"));
   productCount.textContent = compact(realProducts.length);
   brandCount.textContent = compact(brands.size);
+  agentCount.textContent = compact(agents.length + extraAgents.length);
   updatedAt.textContent = new Intl.DateTimeFormat("en", {
     hour: "2-digit",
     minute: "2-digit",
@@ -162,10 +280,10 @@ const renderCategories = () => {
     .map((category) => [category, counts.get(category)]);
 
   categoryGrid.innerHTML = entries.map(([category, count]) => {
-    const item = categoryLabels[category] || { label: category, icon: "QC" };
+    const item = visualCategories[category] || categoryLabels[category] || { label: category, mark: "QC" };
     return `
       <a class="icon-card" href="/categories/${escapeHtml(category)}/" data-category="${escapeHtml(category)}">
-        <span class="icon-mark">${escapeHtml(item.icon)}</span>
+        ${renderIconMark({ ...item, mark: item.mark || item.icon })}
         <span>${escapeHtml(item.label)}</span>
         <small>${escapeHtml(compact(count))}</small>
       </a>
@@ -189,7 +307,7 @@ const renderBrands = () => {
     const mark = brand.split(/\s+/).map((part) => part[0]).join("").slice(0, 3).toUpperCase();
     return `
       <a class="icon-card" href="/brands/${escapeHtml(slugify(brand))}/" data-query="${escapeHtml(brand)}">
-        <span class="icon-mark">${escapeHtml(mark)}</span>
+        ${renderIconMark({ image: brandImages[brand], mark, label: brand })}
         <span>${escapeHtml(brand)}</span>
         <small>${escapeHtml(compact(count))}</small>
       </a>
@@ -198,10 +316,10 @@ const renderBrands = () => {
 };
 
 const renderAgents = () => {
-  agentGrid.innerHTML = agents.map(([name, mark, color]) => {
+  agentGrid.innerHTML = [...agents, ...extraAgents].map(([name, mark, color, image]) => {
     return `
       <button class="icon-card" type="button" data-agent="${escapeHtml(name)}" style="--brand-color:${escapeHtml(color)}">
-        <span class="icon-mark">${escapeHtml(mark)}</span>
+        ${renderIconMark({ image: image || visualAgents[name], mark, label: name })}
         <span>${escapeHtml(name)}</span>
       </button>
     `;

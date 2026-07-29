@@ -336,6 +336,24 @@ main {
   font-size: 30px;
   font-weight: 930;
   line-height: 1;
+  transition: color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.icon-mark img {
+  display: block;
+  max-width: 42px;
+  max-height: 42px;
+  object-fit: contain;
+}
+
+.icon-mark b {
+  font-size: 15px;
+  font-weight: 930;
+  letter-spacing: 0;
+}
+
+.image-mark {
+  border-radius: 12px;
 }
 
 .brand-grid .icon-mark,
@@ -349,6 +367,17 @@ main {
 
 .agent-grid .icon-mark {
   background: linear-gradient(135deg, var(--brand-color, #242b3c), rgba(255, 255, 255, 0.08));
+}
+
+.brand-grid .image-mark,
+.agent-grid .image-mark {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.agent-grid .image-mark img {
+  max-width: 38px;
+  max-height: 38px;
+  border-radius: 9px;
 }
 
 .icon-card span:last-child {

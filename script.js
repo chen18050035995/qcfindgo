@@ -92,6 +92,40 @@ const logoTile = (label, mark, accent = "#eef2ff") => {
     </svg>
   `);
 };
+const brandLogo = (name, artwork) => svgData(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96" role="img" aria-label="${xmlEscape(name)}">
+    ${artwork}
+  </svg>
+`);
+const brandWordmark = (name, text = name, size = 24, weight = 900, family = "Inter,Arial,sans-serif") => brandLogo(name, `
+  <text x="80" y="54" text-anchor="middle" dominant-baseline="middle" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="#eef2ff">${xmlEscape(text)}</text>
+`);
+const brandIcon = (file) => `/assets/brand-icons/${file}.png`;
+const brandLogos = {
+  "Nike": brandIcon("nike"),
+  "Polo Ralph Lauren": brandIcon("polo-ralph-lauren"),
+  "Adidas": brandIcon("adidas"),
+  "Louis Vuitton": brandIcon("louis-vuitton"),
+  "Air Jordan": brandIcon("jordan"),
+  "Jordan": brandIcon("jordan"),
+  "Chrome Hearts": brandIcon("chrome-hearts"),
+  "BAPE": brandIcon("bape"),
+  "Balenciaga": brandIcon("balenciaga"),
+  "Fear of God Essentials": brandIcon("fear-of-god-essentials"),
+  "Other": brandIcon("other-brands"),
+  "Other Brands": brandIcon("other-brands"),
+  "Gallery Dept.": brandIcon("gallery-dept"),
+  "Gallery Dept": brandIcon("gallery-dept"),
+  "Corteiz": brandIcon("corteiz"),
+  "Amiri": brandIcon("amiri"),
+  "Off-White": brandIcon("off-white"),
+  "Supreme": brandIcon("supreme"),
+  "Dior": brandIcon("dior"),
+  "Gucci": brandIcon("gucci"),
+  "Travis Scott": brandIcon("travis-scott"),
+  "Stussy": brandIcon("stussy"),
+  "Hellstar": brandIcon("hellstar")
+};
 const categoryIcon = (name, label) => {
   const common = `fill="none" stroke="#eef2ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`;
   const icons = {
@@ -167,50 +201,55 @@ const agentImage = (name, mark, image) => image || visualAgents[name] || logoTil
 const brandImage = (brand, mark) => brandImages[brand] || logoTile(brand, mark, "#eef2ff");
 
 const brandImages = {
-  "Adidas": simpleIcon("adidas"),
-  "Air Jordan": simpleIcon("jumpman"),
+  ...brandLogos,
+  "Adidas": brandLogos["Adidas"],
+  "Air Jordan": brandLogos["Air Jordan"],
   "Apple": simpleIcon("apple"),
-  "Balenciaga": simpleIcon("balenciaga"),
-  "BAPE": favicon("bape.com"),
-  "Burberry": simpleIcon("burberry"),
+  "AMI": brandWordmark("AMI", "AMI", 34, 900),
+  "Balenciaga": brandLogos["Balenciaga"],
+  "BAPE": brandLogos["BAPE"],
+  "Burberry": brandWordmark("Burberry", "BURBERRY", 18, 900),
   "Carhartt WIP": simpleIcon("carhartt"),
-  "Cartier": simpleIcon("cartier"),
-  "Chanel": simpleIcon("chanel"),
-  "Chrome Hearts": favicon("chromehearts.com"),
-  "Corteiz": favicon("crtz.xyz"),
-  "Dior": simpleIcon("dior"),
+  "Cartier": brandWordmark("Cartier", "Cartier", 24, 700, "Georgia,serif"),
+  "Celine": brandWordmark("Celine", "CELINE", 20, 900),
+  "Chanel": brandWordmark("Chanel", "CHANEL", 18, 900),
+  "Chrome Hearts": brandLogos["Chrome Hearts"],
+  "Corteiz": brandLogos["Corteiz"],
+  "Dior": brandLogos["Dior"],
+  "Dsquared2": brandWordmark("Dsquared2", "D2", 34, 900),
   "DSquared2": favicon("dsquared2.com"),
-  "Fear of God Essentials": favicon("fearofgod.com"),
-  "Fendi": simpleIcon("fendi"),
-  "Gallery Dept.": favicon("gallerydept.com"),
-  "Givenchy": simpleIcon("givenchy"),
+  "Fear of God Essentials": brandLogos["Fear of God Essentials"],
+  "Fendi": brandWordmark("Fendi", "FENDI", 22, 900),
+  "Gallery Dept.": brandLogos["Gallery Dept."],
+  "Gallery Dept": brandLogos["Gallery Dept."],
+  "Givenchy": brandWordmark("Givenchy", "GIVENCHY", 18, 900),
   "Golden Goose": favicon("goldengoose.com"),
-  "Gucci": simpleIcon("gucci"),
-  "Hellstar": favicon("hellstar.com"),
+  "Gucci": brandLogos["Gucci"],
+  "Hellstar": brandLogos["Hellstar"],
   "Hermes": simpleIcon("hermes"),
   "Hoka": simpleIcon("hoka"),
   "JBL": simpleIcon("jbl"),
   "Kenzo": favicon("kenzo.com"),
-  "Lacoste": simpleIcon("lacoste"),
+  "Lacoste": brandWordmark("Lacoste", "LACOSTE", 18, 900),
   "Lanvin": favicon("lanvin.com"),
-  "Loewe": simpleIcon("loewe"),
-  "Louis Vuitton": simpleIcon("louisvuitton"),
-  "Maison Margiela": favicon("maisonmargiela.com"),
-  "Moncler": simpleIcon("moncler"),
-  "New Balance": simpleIcon("newbalance"),
-  "Nike": simpleIcon("nike"),
-  "Off-White": simpleIcon("offwhite"),
+  "Loewe": brandWordmark("Loewe", "LOEWE", 20, 900),
+  "Louis Vuitton": brandLogos["Louis Vuitton"],
+  "Maison Margiela": brandLogo("Maison Margiela", `<rect x="48" y="24" width="64" height="48" rx="8" fill="#eef2ff"/><path d="M61 35 99 61M99 35 61 61M80 30v36M56 48h48" stroke="#050814" stroke-width="4" stroke-linecap="round"/>`),
+  "Moncler": brandWordmark("Moncler", "MONCLER", 18, 900),
+  "New Balance": brandWordmark("New Balance", "NB", 34, 900),
+  "Nike": brandLogos["Nike"],
+  "Off-White": brandLogos["Off-White"],
   "On Running": favicon("on.com"),
   "Onitsuka Tiger": favicon("onitsukatiger.com"),
-  "Palm Angels": favicon("palmangels.com"),
+  "Palm Angels": brandWordmark("Palm Angels", "PA", 34, 900, "Georgia,serif"),
   "PlayStation": simpleIcon("playstation"),
-  "Polo Ralph Lauren": simpleIcon("ralphlauren"),
-  "Prada": simpleIcon("prada"),
+  "Polo Ralph Lauren": brandLogos["Polo Ralph Lauren"],
+  "Prada": brandWordmark("Prada", "PRADA", 24, 700, "Georgia,serif"),
   "Rolex": simpleIcon("rolex"),
-  "Stone Island": favicon("stoneisland.com"),
-  "Stussy": simpleIcon("stussy"),
-  "Supreme": simpleIcon("supreme"),
-  "Swarovski": simpleIcon("swarovski"),
+  "Stone Island": brandLogo("Stone Island", `<rect x="52" y="16" width="56" height="64" rx="6" fill="#eef2ff"/><path d="M80 24 88 48 80 72 72 48Z" fill="#050814"/><path d="M56 48h48M80 20v56" stroke="#050814" stroke-width="3"/>`),
+  "Stussy": brandLogos["Stussy"],
+  "Supreme": brandLogos["Supreme"],
+  "Swarovski": brandWordmark("Swarovski", "SWAN", 20, 900),
   "The North Face": simpleIcon("thenorthface"),
   "Tom Ford": favicon("tomford.com"),
   "Tommy Hilfiger": simpleIcon("tommyhilfiger"),
@@ -219,7 +258,9 @@ const brandImages = {
   "Valentino": favicon("valentino.com"),
   "Vans": simpleIcon("vans"),
   "Versace": favicon("versace.com"),
-  "YSL": simpleIcon("ysl"),
+  "Vlone": brandWordmark("Vlone", "V", 40, 900),
+  "Casablanca": brandWordmark("Casablanca", "CASA", 24, 900),
+  "YSL": brandWordmark("YSL", "YSL", 32, 900, "Georgia,serif"),
   "Yamaha": simpleIcon("yamaha")
 };
 

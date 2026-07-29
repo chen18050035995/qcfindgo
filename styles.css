@@ -312,15 +312,15 @@ main {
 
 .icon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 22px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 20px 18px;
 }
 
 .icon-card {
   display: grid;
   min-width: 0;
   justify-items: center;
-  gap: 8px;
+  gap: 5px;
   border: 0;
   background: transparent;
   text-align: center;
@@ -365,8 +365,8 @@ main {
 }
 
 .brand-grid .icon-mark {
-  width: 104px;
-  height: 72px;
+  width: 118px;
+  height: 80px;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -381,8 +381,8 @@ main {
 }
 
 .brand-grid .image-mark img {
-  width: 104px;
-  height: 72px;
+  width: 118px;
+  height: 80px;
 }
 
 .agent-grid .image-mark img {
@@ -396,8 +396,8 @@ main {
   overflow: hidden;
   width: 100%;
   color: #eef2ff;
-  font-size: 12px;
-  font-weight: 780;
+  font-size: 11px;
+  font-weight: 720;
   line-height: 1.1;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -406,8 +406,14 @@ main {
 .icon-card small {
   color: #68748b;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
+}
+
+.brand-grid .icon-card span:last-child,
+#category-grid .icon-card span:last-child {
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .icon-card:hover .icon-mark,

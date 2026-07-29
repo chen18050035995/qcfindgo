@@ -61,6 +61,23 @@ const agents = [
 const iconify = (name) => `https://api.iconify.design/${name}.svg?color=%23eef2ff`;
 const simpleIcon = (name) => `https://cdn.simpleicons.org/${name}/ffffff`;
 const favicon = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+const svgData = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+const xmlEscape = (value) => String(value ?? "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;");
+const tileIcon = (mark, label, accent = "#b6ff22") => {
+  const text = xmlEscape(String(mark || label || "?").slice(0, 4).toUpperCase());
+  const aria = xmlEscape(String(label || text));
+  return svgData(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="${aria}">
+      <rect x="4" y="4" width="88" height="88" rx="18" fill="#111726" stroke="rgba(255,255,255,.16)" stroke-width="2"/>
+      <rect x="10" y="10" width="76" height="76" rx="14" fill="rgba(255,255,255,.035)"/>
+      <text x="48" y="56" text-anchor="middle" dominant-baseline="middle" font-family="Inter,Arial,sans-serif" font-size="${text.length > 2 ? 26 : 36}" font-weight="900" fill="${accent}">${text}</text>
+    </svg>
+  `);
+};
 
 const visualCategories = {
   sneakers: { label: "Sneakers", mark: "SN", image: iconify("mdi:shoe-sneaker") },
@@ -76,6 +93,10 @@ const visualCategories = {
   "other-accessories": { label: "Accessories", mark: "AC", image: iconify("mdi:sunglasses") },
   electronics: { label: "Electronics", mark: "EL", image: iconify("mdi:cellphone") }
 };
+
+Object.values(visualCategories).forEach((item) => {
+  item.image = tileIcon(item.mark, item.label);
+});
 
 const visualAgents = {
   LoongBuy: favicon("loongbuy.com"),
@@ -105,6 +126,9 @@ const extraAgents = [
   ["GTBuy", "GT", "#ff6400", favicon("gtbuy.com")],
   ["Boonbuy", "BB", "#ff9a00", favicon("boonbuy.com")]
 ];
+
+const agentImage = (name, mark, image) => image || visualAgents[name] || tileIcon(mark, name, "#ff8c16");
+const brandImage = (brand, mark) => brandImages[brand] || tileIcon(mark, brand, "#eef2ff");
 
 const brandImages = {
   "Adidas": simpleIcon("adidas"),
@@ -183,6 +207,7 @@ const escapeHtml = (value) => {
 const safeUrl = (value) => {
   try {
     const url = new URL(String(value || ""), window.location.href);
+    if (url.protocol === "data:" && url.href.startsWith("data:image/svg+xml")) return url.href;
     return ["http:", "https:"].includes(url.protocol) ? url.href : "";
   } catch {
     return "";
@@ -307,7 +332,7 @@ const renderBrands = () => {
     const mark = brand.split(/\s+/).map((part) => part[0]).join("").slice(0, 3).toUpperCase();
     return `
       <a class="icon-card" href="/brands/${escapeHtml(slugify(brand))}/" data-query="${escapeHtml(brand)}">
-        ${renderIconMark({ image: brandImages[brand], mark, label: brand })}
+        ${renderIconMark({ image: brandImage(brand, mark), mark, label: brand })}
         <span>${escapeHtml(brand)}</span>
         <small>${escapeHtml(compact(count))}</small>
       </a>
@@ -319,7 +344,7 @@ const renderAgents = () => {
   agentGrid.innerHTML = [...agents, ...extraAgents].map(([name, mark, color, image]) => {
     return `
       <button class="icon-card" type="button" data-agent="${escapeHtml(name)}" style="--brand-color:${escapeHtml(color)}">
-        ${renderIconMark({ image: image || visualAgents[name], mark, label: name })}
+        ${renderIconMark({ image: agentImage(name, mark, image), mark, label: name })}
         <span>${escapeHtml(name)}</span>
       </button>
     `;

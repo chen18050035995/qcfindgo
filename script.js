@@ -143,6 +143,7 @@ const brandLogos = {
   "Diesel": brandIcon("diesel"),
   "Dior": brandSvg("dior"),
   "Dolce & Gabbana": brandIcon("dolce-gabbana"),
+  "Dsquared2": brandIcon("dsquared2"),
   "Emporio Armani": brandIcon("emporio-armani"),
   "Eric Emanuel": brandIcon("eric-emanuel"),
   "Fear of God Essentials": brandIcon("fear-of-god-essentials"),
@@ -198,6 +199,7 @@ const brandLogos = {
   "Swarovski": brandSvg("swarovski"),
   "SynaWorld": brandIcon("synaworld"),
   "The North Face": brandSvg("the-north-face"),
+  "Thom Browne": brandIcon("thom-browne"),
   "Timberland": brandSvg("timberland"),
   "Tom Ford": brandIcon("tom-ford"),
   "Tommy Hilfiger": brandIcon("tommy-hilfiger"),
@@ -210,7 +212,7 @@ const brandLogos = {
   "Vans": brandSvg("vans"),
   "Versace": brandSvg("versace"),
   "Vivienne Westwood": brandIcon("vivienne-westwood"),
-  "Vlone": brandWordmark("Vlone", "VLONE", 36, 900),
+  "Vlone": brandIcon("vlone"),
   "YSL": brandIcon("ysl"),
 };
 const categoryIcon = (name, label) => {

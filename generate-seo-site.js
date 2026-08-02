@@ -135,8 +135,34 @@ const productCardItems = (items) => items.slice(0, 36).map((product) => ({
   image: product.image,
   alt: `${product.title} QC photos`,
   label: product.title || `${product._brand} find`,
-  meta: `${product._brand} • ${categoryLabel(product._category)}`
+  meta: `${product._brand} - ${categoryLabel(product._category)}`
 }));
+
+const agentPriority = ["Loongbuy", "Lovegobuy", "Superbuy", "AllChinaBuy", "CSSBuy", "Kakobuy", "Oopbuy", "AcBuy"];
+
+const agentButtons = (product) => {
+  const links = product.agentLinks && typeof product.agentLinks === "object" ? product.agentLinks : {};
+  const entries = Object.entries(links)
+    .filter(([, url]) => /^https?:\/\//.test(String(url || "")))
+    .sort((a, b) => {
+      const aIndex = agentPriority.indexOf(a[0]);
+      const bIndex = agentPriority.indexOf(b[0]);
+      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
+    })
+    .slice(0, 8);
+
+  if (!entries.length) return "";
+
+  return `
+    <section class="buy-panel" aria-labelledby="buy-options-title">
+      <h2 id="buy-options-title">Buy with an agent</h2>
+      <p>Choose an agent route to open this item. Compare service fees, shipping routes, QC photo policy, and final landed cost before ordering.</p>
+      <div class="agent-button-grid">
+        ${entries.map(([name, url]) => `<a class="seo-button buy-button" href="${escapeHtml(url)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Buy with ${escapeHtml(name)}</a>`).join("")}
+      </div>
+    </section>
+  `;
+};
 
 const schemaOrg = (type, data) => ({ "@context": "https://schema.org", "@type": type, ...data });
 
@@ -239,9 +265,9 @@ productRecords.forEach((product) => {
       <section class="product-detail">
         <div class="product-media"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(`${title} QC photos and product details`)}" loading="eager" /></div>
         <div class="product-copy">
-          <p class="eyebrow">${escapeHtml(brand)} • ${escapeHtml(category)}</p>
-          <h2>QC product overview</h2>
-          <p>${escapeHtml(title)} is listed as a ${escapeHtml(category.toLowerCase())} find for shoppers comparing QC-style photos, item details, pricing, and agent options before opening the original product link.</p>
+            <p class="eyebrow">${escapeHtml(brand)} - ${escapeHtml(category)}</p>
+            <h2>QC product overview</h2>
+            <p>${escapeHtml(title)} is listed as a ${escapeHtml(category.toLowerCase())} find for shoppers comparing QC-style photos, item details, pricing, and agent options before opening the original product link.</p>
           <dl class="product-facts">
             <div><dt>Brand</dt><dd>${escapeHtml(brand)}</dd></div>
             <div><dt>Category</dt><dd><a href="/categories/${escapeHtml(product._category)}/">${escapeHtml(category)}</a></dd></div>
@@ -249,9 +275,10 @@ productRecords.forEach((product) => {
             <div><dt>Price</dt><dd>${escapeHtml(product.price || product.priceCny || "Check agent")}</dd></div>
           </dl>
           <p>Use the images to check shape, material texture, print placement, stitching, tags, color tone, and overall streetwear styling. For sneakers, compare panels, sole shape, toe box, logo placement, and heel details.</p>
-          <a class="seo-button" href="${escapeHtml(product.url || "/")}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open source listing</a>
+          <a class="seo-button" href="${escapeHtml(product.url || "/")}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open original source</a>
         </div>
       </section>
+      ${agentButtons(product)}
       <section class="seo-copy">
         <h2>QC checklist</h2>
         <ul>

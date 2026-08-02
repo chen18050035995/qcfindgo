@@ -691,6 +691,37 @@ main {
   color: var(--lime);
 }
 
+.buy-panel {
+  border: 1px solid rgba(182, 255, 34, 0.24);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(182, 255, 34, 0.12), rgba(145, 183, 255, 0.08));
+  margin-top: 18px;
+  padding: 22px 24px;
+}
+
+.buy-panel h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.buy-panel p {
+  max-width: 760px;
+  margin: 0 0 16px;
+  color: #d7e0ef;
+}
+
+.agent-button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.buy-button {
+  border-color: rgba(182, 255, 34, 0.36);
+  background: #b6ff22;
+  color: #071100;
+}
+
 @media (max-width: 980px) {
   .topbar {
     grid-template-columns: 1fr auto;

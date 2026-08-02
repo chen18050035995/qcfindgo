@@ -122,34 +122,42 @@ const layout = ({ title, description, canonical, h1, content, schema }) => `<!do
 const cardGrid = (items) => `
   <div class="seo-grid">
     ${items.map((item) => `
-      <a class="seo-card" href="${escapeHtml(item.href)}">
-        ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt)}" loading="lazy" />` : ""}
-        <span>${escapeHtml(item.label)}</span>
-        <small>${escapeHtml(item.meta)}</small>
-      </a>
+      <div class="seo-card">
+        <a class="seo-card-main" href="${escapeHtml(item.href)}">
+          ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt)}" loading="lazy" />` : ""}
+          <span>${escapeHtml(item.label)}</span>
+          <small>${escapeHtml(item.meta)}</small>
+        </a>
+        ${item.buyHref ? `<a class="card-buy-link" href="${escapeHtml(item.buyHref)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Buy with ${escapeHtml(item.buyLabel || "agent")}</a>` : ""}
+      </div>
     `).join("")}
   </div>`;
+
+const agentPriority = ["Loongbuy", "Lovegobuy", "Superbuy", "AllChinaBuy", "CSSBuy", "Kakobuy", "Oopbuy", "AcBuy"];
+
+const agentEntries = (product) => {
+  const links = product.agentLinks && typeof product.agentLinks === "object" ? product.agentLinks : {};
+  return Object.entries(links)
+    .filter(([, url]) => /^https?:\/\//.test(String(url || "")))
+    .sort((a, b) => {
+      const aIndex = agentPriority.indexOf(a[0]);
+      const bIndex = agentPriority.indexOf(b[0]);
+      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
+    });
+};
 
 const productCardItems = (items) => items.slice(0, 36).map((product) => ({
   href: `/products/${product._slug}/`,
   image: product.image,
   alt: `${product.title} QC photos`,
   label: product.title || `${product._brand} find`,
-  meta: `${product._brand} - ${categoryLabel(product._category)}`
+  meta: `${product._brand} - ${categoryLabel(product._category)}`,
+  buyHref: agentEntries(product)[0]?.[1],
+  buyLabel: agentEntries(product)[0]?.[0]
 }));
 
-const agentPriority = ["Loongbuy", "Lovegobuy", "Superbuy", "AllChinaBuy", "CSSBuy", "Kakobuy", "Oopbuy", "AcBuy"];
-
 const agentButtons = (product) => {
-  const links = product.agentLinks && typeof product.agentLinks === "object" ? product.agentLinks : {};
-  const entries = Object.entries(links)
-    .filter(([, url]) => /^https?:\/\//.test(String(url || "")))
-    .sort((a, b) => {
-      const aIndex = agentPriority.indexOf(a[0]);
-      const bIndex = agentPriority.indexOf(b[0]);
-      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
-    })
-    .slice(0, 8);
+  const entries = agentEntries(product).slice(0, 8);
 
   if (!entries.length) return "";
 

@@ -122,6 +122,42 @@ module.exports = {
       title: "How to Use a Reps Spreadsheet Safely",
       keyword: "how to use reps spreadsheet",
       description: "Use reps spreadsheets safely by checking product photos, W2C links, seller notes, agent fees, and final landed cost."
+    },
+    {
+      slug: "nike-sneaker-reps-qc-checklist",
+      title: "Nike Sneaker Reps QC Checklist",
+      keyword: "Nike sneaker reps QC checklist",
+      description: "Check Nike sneaker reps with QC photo rules for shape, toe box, swoosh placement, heel tab, midsole, sizing, and agent links."
+    },
+    {
+      slug: "adidas-samba-reps-buying-guide",
+      title: "Adidas Samba Reps Buying Guide",
+      keyword: "Adidas Samba reps buying guide",
+      description: "Review Adidas Samba reps with QC photos, W2C links, sizing notes, sole shape checks, agent options, and US or Europe buying tips."
+    },
+    {
+      slug: "designer-bag-qc-photo-guide",
+      title: "Designer Bag QC Photo Guide",
+      keyword: "designer bag QC photos",
+      description: "Learn how to compare designer bag QC photos, stitching, hardware, logo placement, leather texture, item IDs, and agent routes."
+    },
+    {
+      slug: "best-hoodie-reps-with-qc-photos",
+      title: "Best Hoodie Reps with QC Photos",
+      keyword: "hoodie reps QC photos",
+      description: "Browse hoodie reps with QC photo checks for fit, print placement, fabric weight, tags, sizing, W2C links, and agent prices."
+    },
+    {
+      slug: "louis-vuitton-reps-spreadsheet-guide",
+      title: "Louis Vuitton Reps Spreadsheet Guide",
+      keyword: "Louis Vuitton reps spreadsheet",
+      description: "Use this Louis Vuitton reps spreadsheet guide to compare bags, sneakers, belts, QC photos, W2C links, item IDs, and agent options."
+    },
+    {
+      slug: "gucci-reps-spreadsheet-guide",
+      title: "Gucci Reps Spreadsheet Guide",
+      keyword: "Gucci reps spreadsheet",
+      description: "Compare Gucci reps across T-shirts, shoes, bags, accessories, QC photos, W2C links, prices, and agent-ready product pages."
     }
   ]
 };

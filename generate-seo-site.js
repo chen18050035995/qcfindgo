@@ -102,7 +102,7 @@ const layout = ({ title, description, canonical, h1, content, schema }) => `<!do
     <meta property="og:description" content="${escapeHtml(truncate(description, 155))}" />
     <meta property="og:url" content="${escapeHtml(canonical)}" />
     <meta property="og:type" content="website" />
-    <link rel="stylesheet" href="/styles.css?v=20260825a" />
+    <link rel="stylesheet" href="/styles.css?v=20260825b" />
     ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ""}
   </head>
   <body>
@@ -233,6 +233,100 @@ const renderQcGallery = (product, title) => {
     </section>`;
 };
 
+const agentIcons = {
+  "Loongbuy": "https://www.google.com/s2/favicons?domain=loongbuy.com&sz=128",
+  "LoongBuy": "https://www.google.com/s2/favicons?domain=loongbuy.com&sz=128",
+  "Oopbuy": "https://www.google.com/s2/favicons?domain=oopbuy.com&sz=128",
+  "OopBuy": "https://www.google.com/s2/favicons?domain=oopbuy.com&sz=128",
+  "JoyAGoo": "https://www.google.com/s2/favicons?domain=joyagoo.com&sz=128",
+  "Lovegobuy": "https://www.google.com/s2/favicons?domain=lovegobuy.com&sz=128",
+  "Hipobuy": "https://www.google.com/s2/favicons?domain=hipobuy.com&sz=128",
+  "Mulebuy": "https://www.google.com/s2/favicons?domain=mulebuy.com&sz=128",
+  "Kakobuy": "https://www.google.com/s2/favicons?domain=kakobuy.com&sz=128",
+  "Superbuy": "https://www.google.com/s2/favicons?domain=superbuy.com&sz=128",
+  "CSSBuy": "https://www.google.com/s2/favicons?domain=cssbuy.com&sz=128",
+  "Sugargoo": "https://www.google.com/s2/favicons?domain=sugargoo.com&sz=128",
+  "Orientdig": "https://www.google.com/s2/favicons?domain=orientdig.com&sz=128",
+  "AllChinaBuy": "https://www.google.com/s2/favicons?domain=allchinabuy.com&sz=128",
+  "LitBuy": "https://www.google.com/s2/favicons?domain=litbuy.com&sz=128",
+  "MyCNBox": "https://www.google.com/s2/favicons?domain=mycnb.com&sz=128",
+  "OODTBuy": "/assets/agent-icons/oodtbuy.png",
+  "OKEYHAUL": "/assets/agent-icons/okeyhaul.png"
+};
+
+const preferredAgentOrder = [
+  "Loongbuy",
+  "LoongBuy",
+  "Oopbuy",
+  "OopBuy",
+  "JoyAGoo",
+  "Lovegobuy",
+  "Hipobuy",
+  "Mulebuy",
+  "Kakobuy",
+  "Superbuy",
+  "CSSBuy",
+  "Sugargoo",
+  "Orientdig",
+  "AllChinaBuy",
+  "LitBuy",
+  "MyCNBox"
+];
+
+const renderAgentLogo = (name) => {
+  const icon = agentIcons[name];
+  const fallback = escapeHtml(name.slice(0, 2).toUpperCase());
+  return icon
+    ? `<img src="${escapeHtml(icon)}" alt="" loading="lazy" onerror="this.remove();this.nextElementSibling.hidden=false" /><span hidden>${fallback}</span>`
+    : `<span>${fallback}</span>`;
+};
+
+const agentEntries = (product) => {
+  const links = product.agentLinks && typeof product.agentLinks === "object" ? product.agentLinks : {};
+  return Object.entries(links)
+    .filter(([, url]) => url)
+    .sort(([first], [second]) => {
+      const a = preferredAgentOrder.indexOf(first);
+      const b = preferredAgentOrder.indexOf(second);
+      return (a === -1 ? 99 : a) - (b === -1 ? 99 : b);
+    });
+};
+
+const renderBuyPanel = (product) => {
+  const agents = agentEntries(product);
+  const price = product.priceCny || product.price || "Check agent";
+  const sourceUrl = product.url || "/";
+  const list = agents.length ? agents : [["Original listing", sourceUrl]];
+  return `
+    <div class="buy-actions">
+      <button class="buy-primary" type="button" data-open-agent-modal>Buy with agent</button>
+      <a class="source-link" href="${escapeHtml(sourceUrl)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open original listing</a>
+    </div>
+    <div class="agent-modal" data-agent-modal hidden>
+      <div class="agent-modal-backdrop" data-close-agent-modal></div>
+      <section class="agent-modal-panel" role="dialog" aria-modal="true" aria-labelledby="agent-modal-title">
+        <button class="agent-modal-close" type="button" aria-label="Close" data-close-agent-modal>×</button>
+        <div class="agent-modal-head">
+          <h2 id="agent-modal-title">Choose agent platform</h2>
+          <p>Pick one agent to continue checkout</p>
+        </div>
+        <div class="agent-choice-list">
+          ${list.map(([name, url], index) => `
+            <a class="agent-choice${index < 4 ? " recommended" : ""}" href="${escapeHtml(url)}" rel="nofollow sponsored noopener noreferrer" target="_blank">
+              <span class="agent-choice-logo">${renderAgentLogo(name)}</span>
+              <span class="agent-choice-copy">
+                <strong>${escapeHtml(name)}${index < 4 ? ` <em>Recommended</em>` : ""}</strong>
+                <small>${escapeHtml(price)} · confirm style and size on agent page</small>
+              </span>
+              <span class="agent-choice-arrow">›</span>
+            </a>
+          `).join("")}
+        </div>
+        <p class="agent-modal-note">Select your style and size on this page first, then confirm the final option again with the agent before checkout.</p>
+      </section>
+    </div>`;
+};
+
 const productEnhancementScript = `
   <script>
     (() => {
@@ -249,6 +343,25 @@ const productEnhancementScript = `
           button.closest(".option-group")?.querySelectorAll(".option-chip").forEach((chip) => chip.classList.remove("selected"));
           button.classList.add("selected");
         });
+      });
+      const modal = document.querySelector("[data-agent-modal]");
+      const openButton = document.querySelector("[data-open-agent-modal]");
+      const closeModal = () => {
+        if (!modal) return;
+        modal.hidden = true;
+        document.body.classList.remove("modal-open");
+      };
+      openButton?.addEventListener("click", () => {
+        if (!modal) return;
+        modal.hidden = false;
+        document.body.classList.add("modal-open");
+        modal.querySelector(".agent-choice")?.focus();
+      });
+      document.querySelectorAll("[data-close-agent-modal]").forEach((button) => {
+        button.addEventListener("click", closeModal);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
       });
     })();
   </script>`;
@@ -364,7 +477,7 @@ productRecords.forEach((product) => {
             <div><dt>Price</dt><dd>${escapeHtml(product.price || product.priceCny || "Check agent")}</dd></div>
           </dl>
           <p>Use the images to check shape, material texture, print placement, stitching, tags, color tone, and overall streetwear styling. For sneakers, compare panels, sole shape, toe box, logo placement, and heel details.</p>
-          <a class="seo-button" href="${escapeHtml(product.url || "/")}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open source listing</a>
+          ${renderBuyPanel(product)}
         </div>
       </section>
       ${renderOptionGroups(product)}

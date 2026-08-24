@@ -41,7 +41,20 @@ const loadProducts = () => {
   const sandbox = { window: {} };
   vm.createContext(sandbox);
   vm.runInContext(code, sandbox);
-  return Array.isArray(sandbox.window.PRODUCTS) ? sandbox.window.PRODUCTS : [];
+  const products = Array.isArray(sandbox.window.PRODUCTS) ? sandbox.window.PRODUCTS : [];
+  const qcPath = path.join(root, "qc-images.js");
+  if (!fs.existsSync(qcPath)) return products;
+
+  const qcCode = fs.readFileSync(qcPath, "utf8");
+  const qcSandbox = { window: {} };
+  vm.createContext(qcSandbox);
+  vm.runInContext(qcCode, qcSandbox);
+  const qcImages = qcSandbox.window.QC_IMAGES || {};
+  return products.map((product) => {
+    const key = `weidian:${product.sourceItemId || ""}`;
+    const images = Array.isArray(qcImages[key]) ? qcImages[key].filter(Boolean).slice(0, 10) : [];
+    return images.length ? { ...product, qcImages: images } : product;
+  });
 };
 
 const products = loadProducts().filter((product) => product?.image && !String(product.image).includes("unsplash"));
@@ -184,6 +197,18 @@ const uniqueImages = (product) => {
     });
 };
 
+const qcImages = (product) => {
+  const seen = new Set();
+  return (Array.isArray(product.qcImages) ? product.qcImages : [])
+    .filter(Boolean)
+    .filter((image) => {
+      if (seen.has(image)) return false;
+      seen.add(image);
+      return true;
+    })
+    .slice(0, 10);
+};
+
 const renderOptionGroups = (product) => {
   const groups = Array.isArray(product.sizes) ? product.sizes : [];
   if (!groups.length) return "";
@@ -215,7 +240,7 @@ const renderOptionGroups = (product) => {
 };
 
 const renderQcGallery = (product, title) => {
-  const images = uniqueImages(product).slice(0, 24);
+  const images = qcImages(product);
   if (images.length <= 1) return "";
   return `
     <section class="qc-gallery" aria-label="QC inspection photos">
@@ -227,6 +252,25 @@ const renderQcGallery = (product, title) => {
         ${images.map((image, index) => `
           <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" class="qc-photo">
             <img src="${escapeHtml(image)}" alt="${escapeHtml(`${title} QC photo ${index + 1}`)}" loading="lazy" />
+          </a>
+        `).join("")}
+      </div>
+    </section>`;
+};
+
+const renderProductGallery = (product, title) => {
+  const images = uniqueImages(product).slice(0, 24);
+  if (images.length <= 1 || qcImages(product).length) return "";
+  return `
+    <section class="qc-gallery" aria-label="Product photos">
+      <div class="section-head">
+        <h2>Product photos</h2>
+        <span>${images.length} photos</span>
+      </div>
+      <div class="qc-grid">
+        ${images.map((image, index) => `
+          <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" class="qc-photo">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(`${title} product photo ${index + 1}`)}" loading="lazy" />
           </a>
         `).join("")}
       </div>
@@ -482,6 +526,7 @@ productRecords.forEach((product) => {
       </section>
       ${renderOptionGroups(product)}
       ${renderQcGallery(product, title)}
+      ${renderProductGallery(product, title)}
       <section class="seo-copy">
         <h2>QC checklist</h2>
         <ul>

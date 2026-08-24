@@ -78,10 +78,6 @@ const nav = `
     <nav class="main-nav" aria-label="Main navigation">
       <a href="/brands/">Brands</a>
       <a href="/categories/">Categories</a>
-      <a href="/finds/">Finds</a>
-      <a href="/keywords/">Keywords</a>
-      <a href="/agents/">Agents</a>
-      <a href="/compare/">Compare</a>
       <a href="/blog/">Guides</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -106,7 +102,7 @@ const layout = ({ title, description, canonical, h1, content, schema }) => `<!do
     <meta property="og:description" content="${escapeHtml(truncate(description, 155))}" />
     <meta property="og:url" content="${escapeHtml(canonical)}" />
     <meta property="og:type" content="website" />
-    <link rel="stylesheet" href="/styles.css?v=20260823a" />
+    <link rel="stylesheet" href="/styles.css?v=20260825a" />
     ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ""}
   </head>
   <body>
@@ -126,95 +122,143 @@ const layout = ({ title, description, canonical, h1, content, schema }) => `<!do
 const cardGrid = (items) => `
   <div class="seo-grid">
     ${items.map((item) => `
-      <div class="seo-card">
-        <a class="seo-card-main" href="${escapeHtml(item.href)}">
+      <a class="seo-card" href="${escapeHtml(item.href)}">
+        ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt)}" loading="lazy" />` : ""}
+        <span>${escapeHtml(item.label)}</span>
+        <small>${escapeHtml(item.meta)}</small>
+      </a>
+    `).join("")}
+  </div>`;
+
+const productCardItems = (items, limit = 36) => items.slice(0, limit).map((product) => ({
+  href: `/products/${product._slug}/`,
+  image: product.image,
+  alt: `${product.title} QC photos`,
+  label: product.title || `${product._brand} find`,
+  meta: `${product._brand} • ${categoryLabel(product._category)}`
+}));
+
+const loadMoreGrid = (items, initial = 48, step = 48) => {
+  const cards = productCardItems(items, items.length);
+  return `
+    <div class="seo-grid load-more-grid" data-initial-count="${initial}" data-step-count="${step}">
+      ${cards.map((item, index) => `
+        <a class="seo-card" href="${escapeHtml(item.href)}" data-load-card${index >= initial ? " hidden" : ""}>
           ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt)}" loading="lazy" />` : ""}
           <span>${escapeHtml(item.label)}</span>
           <small>${escapeHtml(item.meta)}</small>
         </a>
-        ${item.buyHref ? `<a class="card-buy-link" href="${escapeHtml(item.buyHref)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Buy with ${escapeHtml(item.buyLabel || "agent")}</a>` : ""}
-      </div>
-    `).join("")}
-  </div>`;
+      `).join("")}
+    </div>
+    ${cards.length > initial ? `<button class="load-more-button" type="button" data-load-more>Load more products (${cards.length - initial} left)</button>` : ""}
+    <script>
+      (() => {
+        const grid = document.currentScript.previousElementSibling?.matches("[data-load-more]")
+          ? document.currentScript.previousElementSibling.previousElementSibling
+          : document.currentScript.previousElementSibling;
+        const button = grid?.nextElementSibling?.matches("[data-load-more]") ? grid.nextElementSibling : null;
+        if (!grid || !button) return;
+        const step = Number(grid.dataset.stepCount || 48);
+        const update = () => {
+          const hidden = [...grid.querySelectorAll("[data-load-card][hidden]")];
+          button.textContent = hidden.length ? \`Load more products (\${hidden.length} left)\` : "All products loaded";
+          button.hidden = hidden.length === 0;
+        };
+        button.addEventListener("click", () => {
+          [...grid.querySelectorAll("[data-load-card][hidden]")].slice(0, step).forEach((card) => card.hidden = false);
+          update();
+        });
+        update();
+      })();
+    </script>`;
+};
 
-const agentPriority = ["Loongbuy", "Lovegobuy", "Superbuy", "AllChinaBuy", "CSSBuy", "Kakobuy", "Oopbuy", "AcBuy"];
-
-const agentEntries = (product) => {
-  const links = product.agentLinks && typeof product.agentLinks === "object" ? product.agentLinks : {};
-  return Object.entries(links)
-    .filter(([, url]) => /^https?:\/\//.test(String(url || "")))
-    .sort((a, b) => {
-      const aIndex = agentPriority.indexOf(a[0]);
-      const bIndex = agentPriority.indexOf(b[0]);
-      return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
+const uniqueImages = (product) => {
+  const seen = new Set();
+  return [product.image, ...(Array.isArray(product.images) ? product.images : [])]
+    .filter(Boolean)
+    .filter((image) => {
+      if (seen.has(image)) return false;
+      seen.add(image);
+      return true;
     });
 };
 
-const productCardItems = (items, preferredAgent = "") => items.slice(0, 36).map((product) => {
-  const entries = agentEntries(product);
-  const preferred = preferredAgent
-    ? entries.find(([name]) => name.toLowerCase() === preferredAgent.toLowerCase())
-    : null;
-  const buyEntry = preferred || entries[0];
-
-  return {
-    href: `/products/${product._slug}/`,
-    image: product.image,
-    alt: `${product.title} QC photos`,
-    label: product.title || `${product._brand} find`,
-    meta: `${product._brand} - ${categoryLabel(product._category)}`,
-    buyHref: buyEntry?.[1],
-    buyLabel: buyEntry?.[0]
-  };
-});
-
-const agentButtons = (product) => {
-  const entries = agentEntries(product).slice(0, 8);
-
-  if (!entries.length) return "";
-
+const renderOptionGroups = (product) => {
+  const groups = Array.isArray(product.sizes) ? product.sizes : [];
+  if (!groups.length) return "";
   return `
-    <section class="buy-panel" aria-labelledby="buy-options-title">
-      <h2 id="buy-options-title">Buy with an agent</h2>
-      <p>Choose an agent route to open this item. Compare service fees, shipping routes, QC photo policy, and final landed cost before ordering.</p>
-      <div class="agent-button-grid">
-        ${entries.map(([name, url]) => `<a class="seo-button buy-button" href="${escapeHtml(url)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Buy with ${escapeHtml(name)}</a>`).join("")}
-      </div>
-    </section>
-  `;
+    <section class="product-options" aria-label="Style and size options">
+      <h2>Style and size options</h2>
+      ${groups.map((group, groupIndex) => {
+        const values = Array.isArray(group.values) ? group.values : [];
+        if (!values.length) return "";
+        return `
+          <div class="option-group">
+            <div class="option-group-title">${escapeHtml(group.name || `Option ${groupIndex + 1}`)}</div>
+            <div class="option-scroll">
+              ${values.map((value, valueIndex) => {
+                const option = typeof value === "string" ? { label: value } : value;
+                const label = option?.label || option?.name || String(value || "");
+                const image = option?.image || "";
+                return `
+                  <button class="option-chip${valueIndex === 0 ? " selected" : ""}" type="button"${image ? ` data-option-image="${escapeHtml(image)}"` : ""}>
+                    ${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(label)} option" loading="lazy" />` : ""}
+                    <span>${escapeHtml(label)}</span>
+                  </button>`;
+              }).join("")}
+            </div>
+          </div>`;
+      }).join("")}
+      <p class="option-note">Choose the closest style and size before opening an agent link. Final stock and sizing still need to be confirmed on the agent page.</p>
+    </section>`;
 };
+
+const renderQcGallery = (product, title) => {
+  const images = uniqueImages(product).slice(0, 24);
+  if (images.length <= 1) return "";
+  return `
+    <section class="qc-gallery" aria-label="QC inspection photos">
+      <div class="section-head">
+        <h2>QC inspection photos</h2>
+        <span>${images.length} photos</span>
+      </div>
+      <div class="qc-grid">
+        ${images.map((image, index) => `
+          <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" class="qc-photo">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(`${title} QC photo ${index + 1}`)}" loading="lazy" />
+          </a>
+        `).join("")}
+      </div>
+    </section>`;
+};
+
+const productEnhancementScript = `
+  <script>
+    (() => {
+      const mainImage = document.querySelector("[data-main-product-image]");
+      document.querySelectorAll("[data-option-image]").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.closest(".option-group")?.querySelectorAll(".option-chip").forEach((chip) => chip.classList.remove("selected"));
+          button.classList.add("selected");
+          if (mainImage && button.dataset.optionImage) mainImage.src = button.dataset.optionImage;
+        });
+      });
+      document.querySelectorAll(".option-chip:not([data-option-image])").forEach((button) => {
+        button.addEventListener("click", () => {
+          button.closest(".option-group")?.querySelectorAll(".option-chip").forEach((chip) => chip.classList.remove("selected"));
+          button.classList.add("selected");
+        });
+      });
+    })();
+  </script>`;
 
 const schemaOrg = (type, data) => ({ "@context": "https://schema.org", "@type": type, ...data });
 
 const pageUrls = ["/"];
 
-[
-  "about",
-  "agents",
-  "blog",
-  "brands",
-  "categories",
-  "compare",
-  "contact",
-  "finds",
-  "keywords",
-  "new-finds",
-  "privacy-policy",
-  "products",
-  "returns",
-  "shipping",
-  "terms"
-].forEach((dir) => {
-  fs.rmSync(path.join(root, dir), { recursive: true, force: true });
-});
-
 ensureDir("brands");
 ensureDir("categories");
-ensureDir("agents");
-ensureDir("compare");
-ensureDir("finds");
-ensureDir("keywords");
-ensureDir("new-finds");
 ensureDir("products");
 ensureDir("blog");
 ensureDir("seo");
@@ -222,48 +266,15 @@ ensureDir("seo");
 const topBrands = [...byBrand.entries()].sort((a, b) => b[1].length - a[1].length);
 const topCategories = [...byCategory.entries()].sort((a, b) => b[1].length - a[1].length);
 
-const agentPageConfig = config.agentPages || [];
-const comparePageConfig = config.comparePages || [];
-
-const productsForAgent = (agentName) => productRecords
-  .filter((product) => agentEntries(product).some(([name]) => name.toLowerCase() === agentName.toLowerCase()))
-  .slice(0, 36);
-
-const productsForAgents = (agentNames) => productRecords
-  .filter((product) => agentEntries(product).some(([name]) => agentNames.some((agent) => agent.toLowerCase() === name.toLowerCase())))
-  .slice(0, 36);
-
-const searchProducts = (terms, limit = 36) => {
-  const normalized = terms.map((term) => String(term).toLowerCase());
-  return productRecords
-    .filter((product) => {
-      const haystack = [
-        product.title,
-        product.originalTitle,
-        product._brand,
-        product._category,
-        product.subcategory,
-        product.sourceItemId
-      ].join(" ").toLowerCase();
-      return normalized.every((term) => haystack.includes(term));
-    })
-    .slice(0, limit);
-};
-
-const internalLinkList = (items) => `
-  <div class="seo-link-grid">
-    ${items.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join("")}
-  </div>`;
-
 write("brands/index.html", layout({
-  title: "Brand Reps Spreadsheet | W2C Finds, QC Photos and Agents",
-  description: "Browse Nike, Adidas, Louis Vuitton, Dior, Gucci and streetwear brand reps with W2C links, QC photos, agent prices, and product pages.",
+  title: "Streetwear Brands QC Finder | Nike, Adidas, LV, Dior, Gucci",
+  description: "Browse streetwear and designer brand finds with QC-style product photos, category links, agent links, and product discovery pages.",
   canonical: `${config.siteUrl}/brands/`,
-  h1: "Brand Reps Spreadsheet and QC Finder",
+  h1: "Streetwear Brands QC Finder",
   content: cardGrid(topBrands.slice(0, 60).map(([brand, items]) => ({
     href: `/brands/${slugify(brand)}/`,
     label: brand,
-    meta: `${items.length} W2C and QC finds`,
+    meta: `${items.length} QC finds`,
     image: items[0]?.image,
     alt: `${brand} QC finds`
   }))),
@@ -274,18 +285,17 @@ pageUrls.push("/brands/");
 topBrands.slice(0, 80).forEach(([brand, items]) => {
   const slug = slugify(brand);
   write(`brands/${slug}/index.html`, layout({
-    title: `${brand} Reps Spreadsheet | W2C Links, QC Photos and Agents`,
-    description: `Explore ${brand} reps spreadsheet finds with W2C links, QC photos, product details, agent prices, sneakers, streetwear apparel, and bags.`,
+    title: `${brand} QC Finds | Sneakers and Streetwear - qcfindgo`,
+    description: `Explore ${brand} QC finds, product photos, sneakers, streetwear apparel, bags, accessories, and agent-ready product links.`,
     canonical: `${config.siteUrl}/brands/${slug}/`,
-    h1: `${brand} Reps Spreadsheet and QC Photos`,
+    h1: `${brand} QC Finds`,
     content: `
       <section class="seo-copy">
-        <h2>${escapeHtml(brand)} W2C product discovery</h2>
-        <p>Use this ${escapeHtml(brand)} reps spreadsheet page to compare W2C links, QC photos, item IDs, categories, prices, and agent links before opening a product page.</p>
-        <p>Popular searches for this page include ${escapeHtml(brand)} reps, ${escapeHtml(brand)} QC photos, ${escapeHtml(brand)} W2C links, and ${escapeHtml(brand)} agent spreadsheet finds.</p>
+        <h2>${escapeHtml(brand)} product discovery</h2>
+        <p>Use this ${escapeHtml(brand)} page to compare QC-style product photos, titles, categories, prices, and agent links before opening a product page.</p>
       </section>
       ${cardGrid(productCardItems(items))}
-      <section class="seo-copy"><h2>Related categories and agents</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p>${internalLinkList([{ href: "/categories/sneakers/", label: "Sneaker reps spreadsheet" }, { href: "/agents/loongbuy/", label: "LoongBuy spreadsheet" }, { href: "/compare/best-agent-for-sneakers/", label: "Best agent for sneaker reps" }])}</section>
+      <section class="seo-copy"><h2>Related categories</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p></section>
     `,
     schema: schemaOrg("CollectionPage", { name: `${brand} QC Finds`, about: brand })
   }));
@@ -293,14 +303,14 @@ topBrands.slice(0, 80).forEach(([brand, items]) => {
 });
 
 write("categories/index.html", layout({
-  title: "Reps Categories Spreadsheet | Sneakers, Hoodies, Bags and Tees",
-  description: "Browse reps categories with W2C links, QC photos, agent prices, sneakers, hoodies, T-shirts, designer shoes, bags, watches, and accessories.",
+  title: "Streetwear Categories | Sneakers, Hoodies, Tees and Shoes",
+  description: "Browse QC finds by category, including sneakers, hoodies, T-shirts, designer shoes, pants, bags, watches, and accessories.",
   canonical: `${config.siteUrl}/categories/`,
-  h1: "Reps Categories Spreadsheet",
+  h1: "Streetwear Categories",
   content: cardGrid(topCategories.map(([category, items]) => ({
     href: `/categories/${category}/`,
     label: categoryLabel(category),
-    meta: `${items.length} W2C finds`,
+    meta: `${items.length} products`,
     image: items[0]?.image,
     alt: `${categoryLabel(category)} QC finds`
   }))),
@@ -311,287 +321,20 @@ pageUrls.push("/categories/");
 topCategories.forEach(([category, items]) => {
   const label = categoryLabel(category);
   write(`categories/${category}/index.html`, layout({
-    title: `${label} Reps Spreadsheet | W2C Links, QC Photos and Agents`,
-    description: `Browse ${label.toLowerCase()} reps spreadsheet finds with W2C links, QC photos, brand filters, agent prices, and US or Europe buyer notes.`,
+    title: `${label} QC Finds | Streetwear Product Search - qcfindgo`,
+    description: `Browse ${label.toLowerCase()} QC finds with streetwear product photos, brand filters, agent links, and US/EU buyer discovery notes.`,
     canonical: `${config.siteUrl}/categories/${category}/`,
-    h1: `${label} Reps Spreadsheet and QC Photos`,
+    h1: `${label} QC Finds`,
     content: `
       <section class="seo-copy">
-        <h2>${escapeHtml(label)} W2C buying notes</h2>
-        <p>Compare W2C links, QC photos, prices, item IDs, and brand signals before choosing a ${escapeHtml(label.toLowerCase())} find. Prioritize clear QC photos, consistent sizing information, and trusted agent pages.</p>
-        <p>This page targets ${escapeHtml(label.toLowerCase())} reps, ${escapeHtml(label.toLowerCase())} spreadsheet, ${escapeHtml(label.toLowerCase())} QC photos, and ${escapeHtml(label.toLowerCase())} W2C links.</p>
+        <h2>${escapeHtml(label)} buying notes</h2>
+        <p>Compare images, prices, item IDs, and brand signals before choosing a ${escapeHtml(label.toLowerCase())} find. Prioritize clear QC photos, consistent sizing information, and trusted agent pages.</p>
       </section>
-      ${cardGrid(productCardItems(items))}
-      <section class="seo-copy"><h2>Related agent pages</h2>${internalLinkList(agentPageConfig.slice(0, 6).map((agent) => ({ href: `/agents/${agent.slug}/`, label: agent.keyword })))}</section>
+      ${loadMoreGrid(items)}
     `,
     schema: schemaOrg("CollectionPage", { name: `${label} QC Finds` })
   }));
   pageUrls.push(`/categories/${category}/`);
-});
-
-const brandCategoryPairs = [];
-byBrand.forEach((brandItems, brand) => {
-  const categoryCounts = new Map();
-  brandItems.forEach((product) => {
-    categoryCounts.set(product._category, (categoryCounts.get(product._category) || 0) + 1);
-  });
-  categoryCounts.forEach((count, category) => {
-    if (count >= 2) {
-      brandCategoryPairs.push({
-        brand,
-        category,
-        count,
-        items: brandItems.filter((product) => product._category === category)
-      });
-    }
-  });
-});
-
-brandCategoryPairs.sort((a, b) => {
-  const aPrimary = (config.primaryBrands.includes(a.brand) ? 1000 : 0) + (config.primaryCategories.includes(a.category) ? 500 : 0);
-  const bPrimary = (config.primaryBrands.includes(b.brand) ? 1000 : 0) + (config.primaryCategories.includes(b.category) ? 500 : 0);
-  return (bPrimary + b.count) - (aPrimary + a.count);
-});
-
-write("finds/index.html", layout({
-  title: "W2C Finds by Brand and Category | QC Photos and Agents",
-  description: "Browse long-tail W2C finds by brand and category, including Nike sneakers, Adidas shoes, Louis Vuitton bags, Dior sneakers, Gucci tees, hoodies, and accessories.",
-  canonical: `${config.siteUrl}/finds/`,
-  h1: "W2C Finds by Brand and Category",
-  content: `
-    <section class="seo-copy">
-      <h2>Long-tail reps spreadsheet pages</h2>
-      <p>These pages combine brand, category, QC photos, W2C links, item IDs, and agent options. They are designed for high-intent searches such as Nike sneaker reps, Gucci T-shirt QC photos, Dior sneaker W2C links, and Louis Vuitton bag finds.</p>
-    </section>
-    ${cardGrid(brandCategoryPairs.slice(0, 160).map((pair) => ({
-      href: `/finds/${slugify(pair.brand)}-${pair.category}/`,
-      label: `${pair.brand} ${categoryLabel(pair.category)} Finds`,
-      meta: `${pair.count} W2C and QC product pages`,
-      image: pair.items[0]?.image,
-      alt: `${pair.brand} ${categoryLabel(pair.category)} QC photos`
-    })))}
-  `,
-  schema: schemaOrg("CollectionPage", { name: "W2C Finds by Brand and Category" })
-}));
-pageUrls.push("/finds/");
-
-brandCategoryPairs.slice(0, 160).forEach((pair) => {
-  const brandSlug = slugify(pair.brand);
-  const label = categoryLabel(pair.category);
-  const slug = `${brandSlug}-${pair.category}`;
-  write(`finds/${slug}/index.html`, layout({
-    title: `${pair.brand} ${label} Reps | W2C Links, QC Photos and Agents`,
-    description: `Compare ${pair.brand} ${label.toLowerCase()} reps with W2C links, QC photos, prices, item IDs, and agent-ready buying routes for US and Europe buyers.`,
-    canonical: `${config.siteUrl}/finds/${slug}/`,
-    h1: `${pair.brand} ${label} Reps and QC Photos`,
-    content: `
-      <section class="seo-copy">
-        <h2>${escapeHtml(pair.brand)} ${escapeHtml(label)} W2C shortlist</h2>
-        <p>This long-tail page groups ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} finds so shoppers can compare QC photos, product titles, source item IDs, prices, and agent buttons before opening a listing.</p>
-        <p>Search intent covered: ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} reps, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} spreadsheet, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} QC photos, and ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} W2C links.</p>
-      </section>
-      ${cardGrid(productCardItems(pair.items))}
-      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
-        { href: `/brands/${brandSlug}/`, label: `${pair.brand} reps spreadsheet` },
-        { href: `/categories/${pair.category}/`, label: `${label} reps spreadsheet` },
-        { href: "/agents/kakobuy/", label: "Kakobuy spreadsheet" },
-        { href: "/compare/best-agent-for-sneakers/", label: "Best agent for sneaker reps" }
-      ])}</section>
-    `,
-    schema: schemaOrg("CollectionPage", { name: `${pair.brand} ${label} W2C Finds`, about: `${pair.brand} ${label}` })
-  }));
-  pageUrls.push(`/finds/${slug}/`);
-});
-
-const recentProducts = productRecords.slice(0, 72);
-write("new-finds/index.html", layout({
-  title: "New W2C Finds | Latest QC Photos, Agent Links and Prices",
-  description: "Browse the latest W2C finds synced from Nova Finds Go with QC photos, agent links, item IDs, streetwear products, sneakers, hoodies, bags, and accessories.",
-  canonical: `${config.siteUrl}/new-finds/`,
-  h1: "New W2C Finds and QC Photos",
-  content: `
-    <section class="seo-copy">
-      <h2>Latest synced product finds</h2>
-      <p>This page highlights newly synced product pages from Nova Finds Go. Use it to discover recent sneakers, hoodies, designer shoes, bags, accessories, and streetwear products with QC photos and agent-ready links.</p>
-    </section>
-    ${cardGrid(productCardItems(recentProducts))}
-  `,
-  schema: schemaOrg("CollectionPage", { name: "New W2C Finds" })
-}));
-pageUrls.push("/new-finds/");
-
-const keywordLandingPages = [
-  { slug: "nike-sneaker-reps", title: "Nike Sneaker Reps", terms: ["nike", "sneaker"], fallback: "/brands/nike/", description: "Compare Nike sneaker reps with W2C links, QC photos, product IDs, prices, and agent buying routes." },
-  { slug: "adidas-samba-reps", title: "Adidas Samba Reps", terms: ["adidas", "samba"], fallback: "/brands/adidas/", description: "Browse Adidas Samba reps, QC photos, W2C links, agent routes, and similar Adidas sneaker finds." },
-  { slug: "louis-vuitton-bag-reps", title: "Louis Vuitton Bag Reps", terms: ["louis vuitton", "bag"], fallback: "/brands/louis-vuitton/", description: "Find Louis Vuitton bag reps with QC photos, product IDs, W2C links, and agent-ready buying options." },
-  { slug: "dior-sneaker-reps", title: "Dior Sneaker Reps", terms: ["dior", "sneaker"], fallback: "/brands/dior/", description: "Compare Dior sneaker reps with QC photos, source IDs, W2C links, prices, and agent options." },
-  { slug: "gucci-t-shirt-reps", title: "Gucci T-Shirt Reps", terms: ["gucci", "t-shirt"], fallback: "/brands/gucci/", description: "Browse Gucci T-shirt reps with QC photos, W2C links, item IDs, prices, and agent routes." },
-  { slug: "black-hoodie-reps", title: "Black Hoodie Reps", terms: ["hoodie"], fallback: "/categories/hoodies/", description: "Explore black hoodie and streetwear hoodie reps with QC photo checks, W2C links, prices, and agents." },
-  { slug: "designer-shoes-qc-photos", title: "Designer Shoes QC Photos", terms: ["designer-shoes"], fallback: "/categories/designer-shoes/", description: "Review designer shoes QC photos, W2C links, brand pages, prices, and agent-ready product routes." },
-  { slug: "streetwear-spreadsheet-us-buyers", title: "Streetwear Spreadsheet for US Buyers", terms: ["nike"], fallback: "/", description: "Use this streetwear spreadsheet for US buyers to compare QC photos, W2C links, agent prices, and shipping routes." },
-  { slug: "streetwear-spreadsheet-europe-buyers", title: "Streetwear Spreadsheet for Europe Buyers", terms: ["adidas"], fallback: "/", description: "Use this streetwear spreadsheet for Europe buyers to compare QC photos, W2C links, agent choices, and product categories." },
-  { slug: "best-qc-photo-finds", title: "Best QC Photo Finds", terms: ["sneaker"], fallback: "/categories/sneakers/", description: "Browse high-intent QC photo finds across sneakers, hoodies, bags, designer shoes, accessories, and agent pages." }
-];
-
-write("keywords/index.html", layout({
-  title: "Long-Tail Keywords | Reps Spreadsheet, W2C Finds and QC Photos",
-  description: "Browse long-tail keyword pages for Nike sneaker reps, Adidas Samba reps, Louis Vuitton bags, Dior sneakers, Gucci tees, QC photos, and agent spreadsheets.",
-  canonical: `${config.siteUrl}/keywords/`,
-  h1: "Long-Tail Keyword Pages",
-  content: cardGrid(keywordLandingPages.map((page) => {
-    const items = searchProducts(page.terms, 12);
-    return {
-      href: `/keywords/${page.slug}/`,
-      label: page.title,
-      meta: `${items.length || "Curated"} related finds`,
-      image: items[0]?.image || productRecords[0]?.image,
-      alt: `${page.title} QC photos`
-    };
-  })),
-  schema: schemaOrg("CollectionPage", { name: "Long-Tail Keyword Pages" })
-}));
-pageUrls.push("/keywords/");
-
-keywordLandingPages.forEach((page) => {
-  let items = searchProducts(page.terms, 36);
-  if (!items.length && page.fallback.startsWith("/brands/")) {
-    const brandSlug = page.fallback.split("/").filter(Boolean).pop();
-    const brandEntry = topBrands.find(([brand]) => slugify(brand) === brandSlug);
-    items = brandEntry?.[1]?.slice(0, 36) || [];
-  }
-  if (!items.length && page.fallback.startsWith("/categories/")) {
-    const categorySlug = page.fallback.split("/").filter(Boolean).pop();
-    items = byCategory.get(categorySlug)?.slice(0, 36) || [];
-  }
-  if (!items.length) items = productRecords.slice(0, 36);
-
-  write(`keywords/${page.slug}/index.html`, layout({
-    title: `${page.title} | W2C Links, QC Photos and Agent Prices`,
-    description: page.description,
-    canonical: `${config.siteUrl}/keywords/${page.slug}/`,
-    h1: `${page.title}: W2C Links and QC Photos`,
-    content: `
-      <section class="seo-copy">
-        <h2>${escapeHtml(page.title)} buying intent</h2>
-        <p>${escapeHtml(page.description)} This page is built for shoppers comparing product photos, item IDs, prices, categories, and agent buttons before choosing a route.</p>
-        <p>Use the product cards below to move from keyword research into specific QC pages. For each item, check image clarity, material shape, sizing signals, seller notes, and final landed cost.</p>
-      </section>
-      ${cardGrid(productCardItems(items))}
-      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
-        { href: page.fallback, label: `Main ${page.title} page` },
-        { href: "/finds/", label: "Brand and category W2C finds" },
-        { href: "/agents/", label: "Agent spreadsheets" },
-        { href: "/blog/how-to-use-a-reps-spreadsheet-safely/", label: "How to use a reps spreadsheet safely" }
-      ])}</section>
-    `,
-    schema: schemaOrg("CollectionPage", { name: page.title, about: page.title })
-  }));
-  pageUrls.push(`/keywords/${page.slug}/`);
-});
-
-write("agents/index.html", layout({
-  title: "Agent Spreadsheets | LoongBuy, Kakobuy, Oopbuy, Superbuy",
-  description: "Compare agent spreadsheet pages for LoongBuy, Kakobuy, Oopbuy, AllChinaBuy, Superbuy, CSSBuy, Lovegobuy, AcBuy, Sugargoo, and Orientdig.",
-  canonical: `${config.siteUrl}/agents/`,
-  h1: "Agent Spreadsheets and QC Finds",
-  content: `
-    <section class="seo-copy">
-      <h2>Shopping agent keyword hub</h2>
-      <p>Use these agent pages to browse W2C finds, QC photos, product pages, and buying routes by shopping agent. This structure helps match searches such as LoongBuy spreadsheet, Kakobuy spreadsheet, Oopbuy spreadsheet, and Superbuy reps spreadsheet.</p>
-    </section>
-    ${cardGrid(agentPageConfig.map((agent) => {
-      const items = productsForAgent(agent.name);
-      return {
-        href: `/agents/${agent.slug}/`,
-        label: agent.keyword,
-        meta: `${items.length} agent-ready finds`,
-        image: items[0]?.image,
-        alt: `${agent.name} spreadsheet finds`
-      };
-    }))}
-  `,
-  schema: schemaOrg("CollectionPage", { name: "Agent Spreadsheets" })
-}));
-pageUrls.push("/agents/");
-
-agentPageConfig.forEach((agent) => {
-  const items = productsForAgent(agent.name);
-  write(`agents/${agent.slug}/index.html`, layout({
-    title: `${agent.name} Spreadsheet | W2C Links, QC Photos and Prices`,
-    description: `Browse ${agent.name} spreadsheet finds with W2C links, QC photos, item IDs, product details, and streetwear buying notes for US and Europe buyers.`,
-    canonical: `${config.siteUrl}/agents/${agent.slug}/`,
-    h1: `${agent.name} Spreadsheet and QC Finder`,
-    content: `
-      <section class="seo-copy">
-        <h2>${escapeHtml(agent.name)} W2C links and buying notes</h2>
-        <p>This ${escapeHtml(agent.name)} spreadsheet page groups product finds that include an available ${escapeHtml(agent.name)} buying route. Compare QC photos, source item IDs, prices, brand pages, and related categories before ordering.</p>
-        <p>Search intent covered: ${escapeHtml(agent.keyword)}, ${escapeHtml(agent.name)} reps spreadsheet, ${escapeHtml(agent.name)} W2C links, and ${escapeHtml(agent.name)} QC finds.</p>
-      </section>
-      ${cardGrid(productCardItems(items, agent.name))}
-      <section class="seo-copy"><h2>Compare agents</h2>${internalLinkList(comparePageConfig.filter((page) => page.agents.includes(agent.name) || page.agents.includes(agent.name.replace("B", "b"))).slice(0, 4).map((page) => ({ href: `/compare/${page.slug}/`, label: page.title })))}</section>
-    `,
-    schema: schemaOrg("CollectionPage", { name: `${agent.name} Spreadsheet`, about: agent.name })
-  }));
-  pageUrls.push(`/agents/${agent.slug}/`);
-});
-
-write("compare/index.html", layout({
-  title: "Agent Comparison Guides | Best Agents for Reps and QC Photos",
-  description: "Compare Kakobuy, Oopbuy, LoongBuy, Superbuy, AllChinaBuy, CSSBuy and other agents for reps, QC photos, W2C links, and shipping routes.",
-  canonical: `${config.siteUrl}/compare/`,
-  h1: "Agent Comparison Guides",
-  content: `
-    <section class="seo-copy">
-      <h2>Compare agents before opening W2C finds</h2>
-      <p>These comparison pages target high-intent searches like Kakobuy vs Oopbuy, LoongBuy vs Superbuy, best agent for sneaker reps, best agent for US buyers, and best agent for Europe buyers.</p>
-    </section>
-    ${cardGrid(comparePageConfig.map((page) => ({
-      href: `/compare/${page.slug}/`,
-      label: page.title,
-      meta: page.keyword,
-      image: productsForAgents(page.agents)[0]?.image,
-      alt: `${page.title} comparison`
-    })))}
-  `,
-  schema: schemaOrg("CollectionPage", { name: "Agent Comparison Guides" })
-}));
-pageUrls.push("/compare/");
-
-comparePageConfig.forEach((page) => {
-  const items = productsForAgents(page.agents);
-  write(`compare/${page.slug}/index.html`, layout({
-    title: `${page.title} | Agent Prices, QC Photos and W2C Links`,
-    description: page.description,
-    canonical: `${config.siteUrl}/compare/${page.slug}/`,
-    h1: `${page.title}: QC Photos and W2C Buying Routes`,
-    content: `
-      <section class="seo-copy">
-        <h2>${escapeHtml(page.keyword)} quick comparison</h2>
-        <p>${escapeHtml(page.description)} Use this page to compare product availability, QC photo review workflow, source links, agent button availability, service fees, and final landed cost.</p>
-        <h2>What to compare</h2>
-        <ul>
-          <li>Whether the product page has a working W2C or agent link.</li>
-          <li>QC photo clarity, seller notes, sizing information, and product category.</li>
-          <li>Agent service fees, shipping route options, delivery timing, and support response.</li>
-          <li>Final landed cost for United States or Europe buyers.</li>
-        </ul>
-        <h2>Related agent pages</h2>
-        ${internalLinkList(page.agents.map((agentName) => {
-          const agent = agentPageConfig.find((entry) => entry.name.toLowerCase() === agentName.toLowerCase());
-          return { href: agent ? `/agents/${agent.slug}/` : "/agents/", label: `${agentName} spreadsheet` };
-        }))}
-      </section>
-      ${cardGrid(productCardItems(items, page.agents[0]))}
-    `,
-    schema: schemaOrg("Article", {
-      headline: page.title,
-      description: page.description,
-      author: { "@type": "Organization", name: "qcfindgo" },
-      datePublished: today,
-      dateModified: today
-    })
-  }));
-  pageUrls.push(`/compare/${page.slug}/`);
 });
 
 productRecords.forEach((product) => {
@@ -603,17 +346,17 @@ productRecords.forEach((product) => {
     .filter((item) => item !== product && (item._brand === brand || item._category === product._category))
     .slice(0, 8);
   write(`products/${product._slug}/index.html`, layout({
-    title: `${title} | W2C Link, QC Photos and Agent Prices`,
-    description: `Review ${title} W2C link, QC photos, ${brand} product details, price notes, category links, and agent-ready buying options for US and Europe buyers.`,
+    title: `${title} | ${brand} - Streetwear QC Finder`,
+    description: `Review ${title} QC photos, ${brand} product details, price notes, category links, and agent-ready buying options for US and Europe buyers.`,
     canonical,
     h1: title,
     content: `
       <section class="product-detail">
-        <div class="product-media"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(`${title} QC photos and product details`)}" loading="eager" /></div>
+        <div class="product-media"><img src="${escapeHtml(product.image)}" alt="${escapeHtml(`${title} QC photos and product details`)}" loading="eager" data-main-product-image /></div>
         <div class="product-copy">
-            <p class="eyebrow">${escapeHtml(brand)} - ${escapeHtml(category)}</p>
-            <h2>QC product overview</h2>
-            <p>${escapeHtml(title)} is listed as a ${escapeHtml(category.toLowerCase())} find for shoppers comparing QC-style photos, item details, pricing, and agent options before opening the original product link.</p>
+          <p class="eyebrow">${escapeHtml(brand)} • ${escapeHtml(category)}</p>
+          <h2>QC product overview</h2>
+          <p>${escapeHtml(title)} is listed as a ${escapeHtml(category.toLowerCase())} find for shoppers comparing QC-style photos, item details, pricing, and agent options before opening the original product link.</p>
           <dl class="product-facts">
             <div><dt>Brand</dt><dd>${escapeHtml(brand)}</dd></div>
             <div><dt>Category</dt><dd><a href="/categories/${escapeHtml(product._category)}/">${escapeHtml(category)}</a></dd></div>
@@ -621,10 +364,11 @@ productRecords.forEach((product) => {
             <div><dt>Price</dt><dd>${escapeHtml(product.price || product.priceCny || "Check agent")}</dd></div>
           </dl>
           <p>Use the images to check shape, material texture, print placement, stitching, tags, color tone, and overall streetwear styling. For sneakers, compare panels, sole shape, toe box, logo placement, and heel details.</p>
-          <a class="seo-button" href="${escapeHtml(product.url || "/")}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open original source</a>
+          <a class="seo-button" href="${escapeHtml(product.url || "/")}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open source listing</a>
         </div>
       </section>
-      ${agentButtons(product)}
+      ${renderOptionGroups(product)}
+      ${renderQcGallery(product, title)}
       <section class="seo-copy">
         <h2>QC checklist</h2>
         <ul>
@@ -639,6 +383,7 @@ productRecords.forEach((product) => {
         <p>No. qcfindgo is a QC finder and product discovery page that helps shoppers compare product information and find agent-ready links.</p>
       </section>
       <section class="seo-copy"><h2>Related finds</h2>${cardGrid(productCardItems(related))}</section>
+      ${productEnhancementScript}
     `,
     schema: schemaOrg("Product", {
       name: title,
@@ -743,43 +488,8 @@ const keywordRows = [
   ["streetwear sneakers qc","core","commercial","/categories/sneakers/","high","Category page"],
   ["designer shoes qc photos","core","commercial","/categories/designer-shoes/","high","Category page"],
   ["streetwear hoodie qc finder","core","commercial","/categories/hoodies/","medium","Category page"],
-  ["reps spreadsheet","core","commercial","/","high","Homepage primary keyword"],
-  ["w2c finds","core","commercial","/","high","Homepage primary keyword"],
-  ["qc photos","core","commercial","/","high","Homepage primary keyword"],
-  ["agent prices","core","commercial","/agents/","high","Agent hub"],
-  ["loongbuy spreadsheet","agent","commercial","/agents/loongbuy/","high","Agent page"],
-  ["kakobuy spreadsheet","agent","commercial","/agents/kakobuy/","high","Agent page"],
-  ["oopbuy spreadsheet","agent","commercial","/agents/oopbuy/","high","Agent page"],
-  ["allchinabuy spreadsheet","agent","commercial","/agents/allchinabuy/","medium","Agent page"],
-  ["superbuy spreadsheet","agent","commercial","/agents/superbuy/","medium","Agent page"],
-  ["cssbuy spreadsheet","agent","commercial","/agents/cssbuy/","medium","Agent page"],
-  ["kakobuy vs oopbuy","compare","commercial","/compare/kakobuy-vs-oopbuy/","high","Comparison page"],
-  ["loongbuy vs superbuy","compare","commercial","/compare/loongbuy-vs-superbuy/","high","Comparison page"],
-  ["best agent for sneaker reps","compare","commercial","/compare/best-agent-for-sneakers/","high","Comparison page"],
-  ["best agent for us buyers","compare","commercial","/compare/best-agent-for-us-buyers/","medium","Comparison page"],
-  ["best agent for europe buyers","compare","commercial","/compare/best-agent-for-europe-buyers/","medium","Comparison page"],
-  ["nike reps spreadsheet","brand","commercial","/brands/nike/","high","Brand page"],
-  ["adidas reps spreadsheet","brand","commercial","/brands/adidas/","high","Brand page"],
-  ["louis vuitton reps spreadsheet","brand","commercial","/brands/louis-vuitton/","high","Brand page"],
-  ["dior reps spreadsheet","brand","commercial","/brands/dior/","high","Brand page"],
-  ["gucci reps spreadsheet","brand","commercial","/brands/gucci/","high","Brand page"],
-  ["nike sneaker reps","long-tail","commercial","/keywords/nike-sneaker-reps/","high","Keyword landing page"],
-  ["adidas samba reps","long-tail","commercial","/keywords/adidas-samba-reps/","high","Keyword landing page"],
-  ["louis vuitton bag reps","long-tail","commercial","/keywords/louis-vuitton-bag-reps/","high","Keyword landing page"],
-  ["dior sneaker reps","long-tail","commercial","/keywords/dior-sneaker-reps/","high","Keyword landing page"],
-  ["gucci t shirt reps","long-tail","commercial","/keywords/gucci-t-shirt-reps/","high","Keyword landing page"],
-  ["black hoodie reps","long-tail","commercial","/keywords/black-hoodie-reps/","medium","Keyword landing page"],
-  ["designer shoes qc photos","long-tail","commercial","/keywords/designer-shoes-qc-photos/","high","Keyword landing page"],
-  ["new w2c finds","freshness","commercial","/new-finds/","high","Fresh product page"],
-  ["nike sneakers reps","brand-category","commercial","/finds/nike-sneakers/","high","Brand/category long-tail page"],
-  ["adidas sneakers reps","brand-category","commercial","/finds/adidas-sneakers/","high","Brand/category long-tail page"],
-  ["gucci tshirts reps","brand-category","commercial","/finds/gucci-tshirts/","high","Brand/category long-tail page"],
   ["how to use qc photos","informational","research","/blog/how-to-use-qc-photos-before-buying-streetwear/","high","Blog guide"],
-  ["best streetwear sneakers us europe","informational","research","/blog/best-streetwear-sneakers-for-us-and-europe-buyers/","medium","Blog guide"],
-  ["nike sneaker reps qc checklist","informational","research","/blog/nike-sneaker-reps-qc-checklist/","high","Blog guide"],
-  ["adidas samba reps buying guide","informational","research","/blog/adidas-samba-reps-buying-guide/","high","Blog guide"],
-  ["designer bag qc photos","informational","research","/blog/designer-bag-qc-photo-guide/","medium","Blog guide"],
-  ["hoodie reps qc photos","informational","research","/blog/best-hoodie-reps-with-qc-photos/","medium","Blog guide"]
+  ["best streetwear sneakers us europe","informational","research","/blog/best-streetwear-sneakers-for-us-and-europe-buyers/","medium","Blog guide"]
 ];
 write("seo/keywords.csv", keywordRows.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n"));
 
@@ -797,13 +507,11 @@ write("seo/seo-plan.md", `# qcfindgo SEO Execution Plan
 3. Publish two English guides per week under /blog/.
 4. Improve product copy for top 100 products by clicks or impressions.
 5. Build social profiles and 5-10 safe citations after indexing begins.
-6. Keep /new-finds/, /finds/, and /keywords/ refreshed whenever Nova Finds Go adds products.
 
 ## Weekly Content Cadence
 - 1 brand or category guide
 - 1 buyer checklist or outfit guide
 - Add internal links to 5-10 product pages per article
-- Refresh long-tail brand/category pages after each product sync
 
 ## Off-Page Rule
 Avoid bulk paid links, automated comments, PBN links, or irrelevant directories. Prioritize Pinterest, Instagram, TikTok, Reddit discussions, guest posts, and small fashion blogs.

@@ -731,7 +731,6 @@ main {
 
 .seo-link-grid a:hover,
 .seo-card:hover,
-.seo-card-main:hover,
 .seo-button:hover {
   border-color: rgba(182, 255, 34, 0.58);
   color: var(--lime);
@@ -783,11 +782,6 @@ main {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.045);
-}
-
-.seo-card-main {
-  display: block;
-  color: inherit;
   text-decoration: none;
 }
 
@@ -821,24 +815,26 @@ main {
   font-weight: 750;
 }
 
-.card-buy-link {
+.load-more-button {
   display: flex;
-  min-height: 40px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-top: 1px solid var(--line);
-  background: rgba(182, 255, 34, 0.12);
+  margin: 18px auto 0;
+  border: 1px solid rgba(182, 255, 34, 0.42);
+  border-radius: 8px;
+  background: rgba(182, 255, 34, 0.11);
   color: var(--lime);
-  font-size: 13px;
+  cursor: pointer;
+  font-size: 14px;
   font-weight: 900;
-  padding: 10px 12px;
-  text-align: center;
-  text-decoration: none;
+  padding: 10px 18px;
 }
 
-.card-buy-link:hover {
-  background: var(--lime);
-  color: #071100;
+.load-more-button:hover,
+.load-more-button:focus-visible {
+  border-color: rgba(182, 255, 34, 0.72);
+  background: rgba(182, 255, 34, 0.17);
 }
 
 .product-detail {
@@ -886,35 +882,124 @@ main {
   color: var(--lime);
 }
 
-.buy-panel {
-  border: 1px solid rgba(182, 255, 34, 0.24);
+.product-options,
+.qc-gallery {
+  margin: 18px 0;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(182, 255, 34, 0.12), rgba(145, 183, 255, 0.08));
-  margin-top: 18px;
-  padding: 22px 24px;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 24px;
 }
 
-.buy-panel h2 {
-  margin: 0 0 10px;
+.product-options h2,
+.qc-gallery h2 {
+  margin: 0;
   font-size: 22px;
+  letter-spacing: 0;
 }
 
-.buy-panel p {
-  max-width: 760px;
-  margin: 0 0 16px;
-  color: #d7e0ef;
-}
-
-.agent-button-grid {
-  display: flex;
-  flex-wrap: wrap;
+.option-group {
+  display: grid;
   gap: 10px;
+  margin-top: 18px;
 }
 
-.buy-button {
-  border-color: rgba(182, 255, 34, 0.36);
-  background: #b6ff22;
-  color: #071100;
+.option-group-title {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.option-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-color: rgba(182, 255, 34, 0.42) transparent;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.option-chip {
+  display: grid;
+  min-width: 112px;
+  max-width: 152px;
+  align-content: start;
+  justify-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #eef4ff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.25;
+  padding: 10px;
+  text-align: center;
+}
+
+.option-chip img {
+  width: 82px;
+  height: 82px;
+  border-radius: 6px;
+  background: #121827;
+  object-fit: cover;
+}
+
+.option-chip.selected,
+.option-chip:hover,
+.option-chip:focus-visible {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 1px rgba(182, 255, 34, 0.34);
+}
+
+.option-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.section-head span {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.qc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.qc-photo {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #121827;
+}
+
+.qc-photo:hover,
+.qc-photo:focus-visible {
+  border-color: rgba(182, 255, 34, 0.58);
+}
+
+.qc-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
 @media (max-width: 980px) {
@@ -1024,11 +1109,26 @@ main {
   .seo-hero,
   .seo-copy,
   .seo-strip,
-  .product-detail {
+  .product-detail,
+  .product-options,
+  .qc-gallery {
     padding: 18px;
   }
 
   .product-facts {
     grid-template-columns: 1fr;
+  }
+
+  .qc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .option-chip {
+    min-width: 96px;
+  }
+
+  .option-chip img {
+    width: 72px;
+    height: 72px;
   }
 }

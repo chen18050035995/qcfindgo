@@ -4,6 +4,8 @@ const searchInput = document.querySelector("#search-input");
 const categoryGrid = document.querySelector("#category-grid");
 const brandGrid = document.querySelector("#brand-grid");
 const agentGrid = document.querySelector("#agent-grid");
+const showcaseGrid = document.querySelector("#showcase-grid");
+const showcaseUpdated = document.querySelector("#showcase-updated");
 const results = document.querySelector("#results");
 const resultGrid = document.querySelector("#result-grid");
 const resultTitle = document.querySelector("#result-title");
@@ -61,6 +63,7 @@ const agents = [
 const iconify = (name) => `https://api.iconify.design/${name}.svg?color=%23eef2ff`;
 const simpleIcon = (name) => `https://cdn.simpleicons.org/${name}/ffffff`;
 const favicon = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+const agentIcon = (file) => `/assets/agent-icons/${file}.png`;
 const svgData = (svg) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 const xmlEscape = (value) => String(value ?? "")
   .replaceAll("&", "&amp;")
@@ -280,8 +283,8 @@ const extraAgents = [
   ["iTaoBuy", "ITB", "#ff7200", favicon("itaobuy.com")],
   ["FishGoo", "FG", "#2f7fff", favicon("fishgoo.com")],
   ["Eastmallbuy", "EM", "#ffffff", favicon("eastmallbuy.com")],
-  ["OODTBuy", "OOD", "#ff7a00", favicon("oodtbuy.com")],
-  ["OKEYHAUL", "OK", "#ff7300", favicon("okeyhaul.com")],
+  ["OODTBuy", "OOD", "#ff7a00", agentIcon("oodtbuy")],
+  ["OKEYHAUL", "OK", "#ff7300", agentIcon("okeyhaul")],
   ["GTBuy", "GT", "#ff6400", favicon("gtbuy.com")],
   ["Boonbuy", "BB", "#ff9a00", favicon("boonbuy.com")]
 ];
@@ -295,8 +298,8 @@ const brandImages = {
   "Cartier": brandLogos["Cartier"] || brandIcon("cartier"),
   "Celine": brandLogos["Celine"] || brandIcon("celine"),
   "Chanel": brandLogos["Chanel"] || brandIcon("chanel"),
-  "Dsquared2": brandWordmark("Dsquared2", "D2", 38, 900),
-  "DSquared2": brandWordmark("DSquared2", "D2", 38, 900),
+  "Dsquared2": brandIcon("dsquared2"),
+  "DSquared2": brandIcon("dsquared2"),
   "Fendi": brandLogos["Fendi"] || brandIcon("fendi"),
   "Givenchy": brandLogos["Givenchy"] || brandIcon("givenchy"),
   "Lacoste": brandLogos["Lacoste"] || brandIcon("lacoste"),
@@ -330,6 +333,20 @@ const safeUrl = (value) => {
   } catch {
     return "";
   }
+};
+
+const productImageUrl = (value) => {
+  const url = safeUrl(value);
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "si.geilicdn.com") {
+      return `https://images.weserv.nl/?url=${encodeURIComponent(parsed.host + parsed.pathname)}&w=640&h=640&fit=cover`;
+    }
+  } catch {
+    return url;
+  }
+  return url;
 };
 
 const renderIconMark = ({ image, mark, label }) => {
@@ -485,6 +502,105 @@ const renderAgents = () => {
 
 const getProductUrl = (product) => `/products/${getProductSlug(product)}/`;
 
+const showcaseSets = [
+  {
+    title: "Fresh sneaker finds",
+    filter: (product) => product.category === "sneakers" || normalize(product.categoryLabel).includes("sneaker")
+  },
+  {
+    title: "Streetwear tops",
+    filter: (product) => ["hoodies", "tshirts", "jackets"].includes(product.category)
+  },
+  {
+    title: "Designer accessories",
+    filter: (product) => ["designer-bags", "designer-watches", "other-accessories", "electronics"].includes(product.category)
+  },
+  {
+    title: "Popular brand picks",
+    filter: (product) => Boolean(brandImages[getBrand(product)])
+  }
+];
+
+const getShowcaseLimit = () => {
+  if (window.matchMedia("(max-width: 560px)").matches) return 2;
+  if (window.matchMedia("(max-width: 980px)").matches) return 4;
+  return 6;
+};
+
+const scoreForHour = (product, rowIndex, hourBucket) => {
+  const key = `${getProductSlug(product)}-${getBrand(product)}-${rowIndex}-${hourBucket}`;
+  let hash = 2166136261;
+  for (let index = 0; index < key.length; index += 1) {
+    hash ^= key.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+};
+
+const renderProductShowcases = () => {
+  if (!showcaseGrid) return;
+  const hourBucket = Math.floor(Date.now() / 3600000);
+  const limit = getShowcaseLimit();
+  const used = new Set();
+
+  showcaseGrid.innerHTML = showcaseSets.map((set, rowIndex) => {
+    let rowItems = realProducts
+      .filter((product) => !used.has(getProductSlug(product)) && set.filter(product))
+      .sort((first, second) => scoreForHour(first, rowIndex, hourBucket) - scoreForHour(second, rowIndex, hourBucket))
+      .slice(0, limit);
+
+    if (rowItems.length < limit) {
+      const fill = realProducts
+        .filter((product) => !used.has(getProductSlug(product)) && !rowItems.includes(product))
+        .sort((first, second) => scoreForHour(first, rowIndex + 7, hourBucket) - scoreForHour(second, rowIndex + 7, hourBucket))
+        .slice(0, limit - rowItems.length);
+      rowItems = rowItems.concat(fill);
+    }
+
+    rowItems.forEach((product) => used.add(getProductSlug(product)));
+
+    return `
+      <section class="showcase-row" aria-label="${escapeHtml(set.title)}">
+        <div class="showcase-row-head">
+          <h3>${escapeHtml(set.title)}</h3>
+          <span>${escapeHtml(limit)} picks</span>
+        </div>
+        <div class="product-row">
+          ${rowItems.map((product) => `
+            <a class="product-card" href="${escapeHtml(getProductUrl(product))}">
+              <span class="product-card-media">
+                <img src="${escapeHtml(productImageUrl(product.image))}" alt="${escapeHtml(product.alt || product.title || "Product QC photos")}" loading="lazy" decoding="async" onerror="this.closest('.product-card').dataset.imageError='true'" />
+                <span>${escapeHtml(getBrand(product).slice(0, 2).toUpperCase())}</span>
+              </span>
+              <span class="product-card-copy">
+                <strong>${escapeHtml(product.title || "Product")}</strong>
+                <span>${escapeHtml(getBrand(product))}</span>
+                <small>${escapeHtml(product.price || product.priceCny || "QC find")}</small>
+              </span>
+            </a>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }).join("");
+
+  if (showcaseUpdated) {
+    showcaseUpdated.textContent = `Updated ${new Intl.DateTimeFormat("en", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).format(new Date())}`;
+  }
+};
+
+const scheduleShowcaseRefresh = () => {
+  const msToNextHour = 3600000 - (Date.now() % 3600000) + 1000;
+  window.setTimeout(() => {
+    renderProductShowcases();
+    scheduleShowcaseRefresh();
+  }, msToNextHour);
+};
+
 const renderResults = (items, label) => {
   const shown = items.slice(0, 48);
   results.hidden = false;
@@ -539,4 +655,14 @@ renderStats();
 renderCategories();
 renderBrands();
 renderAgents();
+renderProductShowcases();
 attachIconFallbacks();
+scheduleShowcaseRefresh();
+
+let lastShowcaseLimit = getShowcaseLimit();
+window.addEventListener("resize", () => {
+  const nextLimit = getShowcaseLimit();
+  if (nextLimit === lastShowcaseLimit) return;
+  lastShowcaseLimit = nextLimit;
+  renderProductShowcases();
+});

@@ -15,7 +15,7 @@
     <meta property="og:description" content="Browse W2C finds, QC photos, agent prices, sneakers, streetwear apparel, designer brands, and agent-ready product pages." />
     <meta property="og:url" content="https://qcfindgo.com/" />
     <meta property="og:type" content="website" />
-    <link rel="stylesheet" href="styles.css?v=20260823a" />
+    <link rel="stylesheet" href="styles.css?v=20260824a" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -81,25 +81,33 @@
       <section class="matrix" id="categories" aria-labelledby="category-title">
         <div class="matrix-label active">
           <span class="grid-icon">#</span>
-          <strong><a href="/categories/">All Categories</a></strong>
+          <strong id="category-title"><a href="/categories/">All Categories</a></strong>
         </div>
-        <div class="icon-grid" id="category-grid"></div>
+        <div class="icon-rail" id="category-grid"></div>
       </section>
 
       <section class="matrix" aria-labelledby="brand-title">
         <div class="matrix-label active">
           <span class="grid-icon">B</span>
-          <strong><a href="/brands/">All Brands</a></strong>
+          <strong id="brand-title"><a href="/brands/">All Brands</a></strong>
         </div>
-        <div class="icon-grid brand-grid" id="brand-grid"></div>
+        <div class="icon-rail brand-grid" id="brand-grid"></div>
       </section>
 
       <section class="matrix" id="resources" aria-labelledby="agent-title">
         <div class="matrix-label active">
           <span class="grid-icon">A</span>
-          <strong>All Agents</strong>
+          <strong id="agent-title">All Agents</strong>
         </div>
-        <div class="icon-grid agent-grid" id="agent-grid"></div>
+        <div class="icon-rail agent-grid" id="agent-grid"></div>
+      </section>
+
+      <section class="product-showcases" aria-labelledby="showcase-title">
+        <div class="showcase-head">
+          <h2 id="showcase-title">Fresh QC product finds</h2>
+          <span id="showcase-updated">Updates hourly</span>
+        </div>
+        <div id="showcase-grid" class="showcase-stack"></div>
       </section>
 
       <section class="seo-strip" aria-labelledby="seo-pages-title">
@@ -142,6 +150,6 @@
     </main>
 
     <script src="products.js?v=20260728a"></script>
-    <script src="script.js?v=20260823a"></script>
+    <script src="script.js?v=20260824a"></script>
   </body>
 </html>

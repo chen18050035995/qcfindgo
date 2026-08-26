@@ -91,6 +91,9 @@ const nav = `
     <nav class="main-nav" aria-label="Main navigation">
       <a href="/brands/">Brands</a>
       <a href="/categories/">Categories</a>
+      <a href="/finds/">Finds</a>
+      <a href="/keywords/">Keywords</a>
+      <a href="/new-finds/">New Finds</a>
       <a href="/blog/">Guides</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -414,14 +417,122 @@ const schemaOrg = (type, data) => ({ "@context": "https://schema.org", "@type": 
 
 const pageUrls = ["/"];
 
+[
+  "about",
+  "blog",
+  "brands",
+  "categories",
+  "contact",
+  "finds",
+  "keywords",
+  "new-finds",
+  "privacy-policy",
+  "products",
+  "qc-disclaimer",
+  "returns",
+  "shipping",
+  "terms"
+].forEach((dir) => {
+  fs.rmSync(path.join(root, dir), { recursive: true, force: true });
+});
+
 ensureDir("brands");
 ensureDir("categories");
+ensureDir("finds");
+ensureDir("keywords");
+ensureDir("new-finds");
 ensureDir("products");
 ensureDir("blog");
 ensureDir("seo");
 
 const topBrands = [...byBrand.entries()].sort((a, b) => b[1].length - a[1].length);
 const topCategories = [...byCategory.entries()].sort((a, b) => b[1].length - a[1].length);
+
+const internalLinkList = (items) => `
+  <div class="seo-link-grid">
+    ${items.map((item) => `<a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a>`).join("")}
+  </div>`;
+
+const searchProducts = (terms, limit = 36) => {
+  const normalized = terms.map((term) => String(term).toLowerCase());
+  return productRecords
+    .filter((product) => {
+      const haystack = [
+        product.title,
+        product.originalTitle,
+        product._brand,
+        product._category,
+        product.subcategory,
+        product.sourceItemId
+      ].join(" ").toLowerCase();
+      return normalized.every((term) => haystack.includes(term));
+    })
+    .slice(0, limit);
+};
+
+const faqItems = [
+  {
+    question: "What is a QC finder page?",
+    answer: "A QC finder page helps shoppers compare product photos, item IDs, prices, categories, and agent-ready links before opening a source listing."
+  },
+  {
+    question: "Should I check QC photos before buying?",
+    answer: "Yes. Check shape, logo placement, stitching, material texture, color tone, sizing notes, and whether the listing has enough clear product photos."
+  },
+  {
+    question: "Does qcfindgo sell products directly?",
+    answer: "No. qcfindgo is a product discovery and QC research site. Orders, shipping, returns, and refunds are handled by the selected seller or shopping agent."
+  }
+];
+
+const faqSection = (items = faqItems) => `
+  <section class="seo-copy faq-block">
+    <h2>FAQ</h2>
+    ${items.map((item) => `
+      <h3>${escapeHtml(item.question)}</h3>
+      <p>${escapeHtml(item.answer)}</p>
+    `).join("")}
+  </section>`;
+
+const faqSchema = (items = faqItems) => schemaOrg("FAQPage", {
+  mainEntity: items.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer
+    }
+  }))
+});
+
+const qcChecklistSection = (title = "QC checklist") => `
+  <section class="seo-copy">
+    <h2>${escapeHtml(title)}</h2>
+    <ul>
+      <li>Compare product photos with the expected retail shape, color, and overall proportions.</li>
+      <li>Check logo placement, print alignment, stitching, hardware, tags, and material texture.</li>
+      <li>For shoes, review toe box, heel shape, sole thickness, panel alignment, and sizing notes.</li>
+      <li>Compare item ID, price, seller notes, agent fees, shipping route, and final landed cost.</li>
+    </ul>
+  </section>`;
+
+const buyerProcessSection = (keyword) => `
+  <section class="seo-copy">
+    <h2>How to use this ${escapeHtml(keyword)} page</h2>
+    <ol>
+      <li>Open several related product cards instead of choosing the first listing.</li>
+      <li>Compare QC photos, item IDs, price notes, brand page, and category page.</li>
+      <li>Use the agent button only after checking fees, shipping route, delivery timing, and support policy.</li>
+      <li>Save similar products so you can compare materials, sizing, and final cost before ordering.</li>
+    </ol>
+  </section>`;
+
+const trustSection = `
+  <section class="seo-copy trust-block">
+    <h2>Why this page is useful</h2>
+    <p>qcfindgo keeps product discovery pages focused on visible product information: QC-style images, brand labels, category paths, item IDs, prices, and available agent routes. This helps US and Europe shoppers compare options before leaving for a source listing.</p>
+    <p>For site questions or corrections, contact <a href="mailto:${escapeHtml(config.contactEmail)}">${escapeHtml(config.contactEmail)}</a>. You can also review our <a href="/about/">About</a>, <a href="/shipping/">Shipping Notes</a>, and <a href="/returns/">Returns and Refunds</a> pages.</p>
+  </section>`;
 
 write("brands/index.html", layout({
   title: "Streetwear Brands QC Finder | Nike, Adidas, LV, Dior, Gucci",
@@ -451,10 +562,14 @@ topBrands.slice(0, 80).forEach(([brand, items]) => {
         <h2>${escapeHtml(brand)} product discovery</h2>
         <p>Use this ${escapeHtml(brand)} page to compare QC-style product photos, titles, categories, prices, and agent links before opening a product page.</p>
       </section>
+      ${buyerProcessSection(`${brand} QC finds`)}
+      ${qcChecklistSection(`${brand} QC checklist`)}
       ${cardGrid(productCardItems(items))}
-      <section class="seo-copy"><h2>Related categories</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p></section>
+      <section class="seo-copy"><h2>Related categories</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p>${internalLinkList([{ href: "/categories/sneakers/", label: "Sneaker QC finds" }, { href: "/categories/hoodies/", label: "Hoodie QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
+      ${faqSection()}
+      ${trustSection}
     `,
-    schema: schemaOrg("CollectionPage", { name: `${brand} QC Finds`, about: brand })
+    schema: [schemaOrg("CollectionPage", { name: `${brand} QC Finds`, about: brand }), faqSchema()]
   }));
   pageUrls.push(`/brands/${slug}/`);
 });
@@ -487,11 +602,201 @@ topCategories.forEach(([category, items]) => {
         <h2>${escapeHtml(label)} buying notes</h2>
         <p>Compare images, prices, item IDs, and brand signals before choosing a ${escapeHtml(label.toLowerCase())} find. Prioritize clear QC photos, consistent sizing information, and trusted agent pages.</p>
       </section>
+      ${buyerProcessSection(`${label.toLowerCase()} QC finds`)}
+      ${qcChecklistSection(`${label} QC checklist`)}
       ${loadMoreGrid(items)}
+      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([{ href: "/brands/nike/", label: "Nike QC finds" }, { href: "/brands/adidas/", label: "Adidas QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
+      ${faqSection()}
+      ${trustSection}
     `,
     schema: [schemaOrg("CollectionPage", { name: `${label} QC Finds` }), faqSchema()]
   }));
   pageUrls.push(`/categories/${category}/`);
+});
+
+const brandCategoryPairs = [];
+byBrand.forEach((brandItems, brand) => {
+  const categoryCounts = new Map();
+  brandItems.forEach((product) => {
+    categoryCounts.set(product._category, (categoryCounts.get(product._category) || 0) + 1);
+  });
+  categoryCounts.forEach((count, category) => {
+    if (count >= 2) {
+      brandCategoryPairs.push({
+        brand,
+        category,
+        count,
+        items: brandItems.filter((product) => product._category === category)
+      });
+    }
+  });
+});
+
+brandCategoryPairs.sort((a, b) => {
+  const aPrimary = (config.primaryBrands.includes(a.brand) ? 1000 : 0) + (config.primaryCategories.includes(a.category) ? 500 : 0);
+  const bPrimary = (config.primaryBrands.includes(b.brand) ? 1000 : 0) + (config.primaryCategories.includes(b.category) ? 500 : 0);
+  return (bPrimary + b.count) - (aPrimary + a.count);
+});
+
+write("finds/index.html", layout({
+  title: "W2C Finds by Brand and Category | QC Photos and Product Pages",
+  description: "Browse long-tail W2C finds by brand and category, including Nike sneakers, Adidas shoes, Louis Vuitton bags, Dior sneakers, Gucci tees, hoodies, and accessories.",
+  canonical: `${config.siteUrl}/finds/`,
+  h1: "W2C Finds by Brand and Category",
+  content: `
+    <section class="seo-copy">
+      <h2>Long-tail QC finder pages</h2>
+      <p>These pages combine brand, category, QC photos, item IDs, prices, and product pages. They are designed for high-intent searches such as Nike sneaker reps, Gucci T-shirt QC photos, Dior sneaker W2C links, and Louis Vuitton bag finds.</p>
+    </section>
+    ${cardGrid(brandCategoryPairs.slice(0, 180).map((pair) => ({
+      href: `/finds/${slugify(pair.brand)}-${pair.category}/`,
+      label: `${pair.brand} ${categoryLabel(pair.category)} Finds`,
+      meta: `${pair.count} QC product pages`,
+      image: pair.items[0]?.image,
+      alt: `${pair.brand} ${categoryLabel(pair.category)} QC photos`
+    })))}
+  `,
+  schema: schemaOrg("CollectionPage", { name: "W2C Finds by Brand and Category" })
+}));
+pageUrls.push("/finds/");
+
+brandCategoryPairs.slice(0, 180).forEach((pair) => {
+  const brandSlug = slugify(pair.brand);
+  const label = categoryLabel(pair.category);
+  const slug = `${brandSlug}-${pair.category}`;
+  write(`finds/${slug}/index.html`, layout({
+    title: `${pair.brand} ${label} Reps | W2C Links and QC Photos`,
+    description: `Compare ${pair.brand} ${label.toLowerCase()} reps with W2C links, QC photos, prices, item IDs, and product pages for US and Europe buyers.`,
+    canonical: `${config.siteUrl}/finds/${slug}/`,
+    h1: `${pair.brand} ${label} Reps and QC Photos`,
+    content: `
+      <section class="seo-copy">
+        <h2>${escapeHtml(pair.brand)} ${escapeHtml(label)} W2C shortlist</h2>
+        <p>This long-tail page groups ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} finds so shoppers can compare QC photos, product titles, source item IDs, prices, and buying routes before opening a listing.</p>
+        <p>Search intent covered: ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} reps, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} spreadsheet, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} QC photos, and ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} W2C links.</p>
+      </section>
+      ${buyerProcessSection(`${pair.brand} ${label.toLowerCase()} reps`)}
+      ${qcChecklistSection(`${pair.brand} ${label} QC checklist`)}
+      ${loadMoreGrid(pair.items)}
+      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
+        { href: `/brands/${brandSlug}/`, label: `${pair.brand} QC finds` },
+        { href: `/categories/${pair.category}/`, label: `${label} QC finds` },
+        { href: "/keywords/", label: "Long-tail keyword pages" },
+        { href: "/blog/how-to-use-qc-photos-before-buying-streetwear/", label: "How to use QC photos" }
+      ])}</section>
+      ${faqSection()}
+      ${trustSection}
+    `,
+    schema: [schemaOrg("CollectionPage", { name: `${pair.brand} ${label} W2C Finds`, about: `${pair.brand} ${label}` }), faqSchema()]
+  }));
+  pageUrls.push(`/finds/${slug}/`);
+});
+
+const recentProducts = productRecords.slice(0, 96);
+write("new-finds/index.html", layout({
+  title: "New W2C Finds | Latest QC Photos and Product Pages",
+  description: "Browse the latest W2C finds synced from Nova Finds Go with QC photos, item IDs, streetwear products, sneakers, hoodies, bags, and accessories.",
+  canonical: `${config.siteUrl}/new-finds/`,
+  h1: "New W2C Finds and QC Photos",
+  content: `
+    <section class="seo-copy">
+      <h2>Latest synced product finds</h2>
+      <p>This page highlights newly synced product pages from Nova Finds Go. Use it to discover recent sneakers, hoodies, designer shoes, bags, accessories, and streetwear products with QC photos and product pages.</p>
+    </section>
+    ${buyerProcessSection("new W2C finds")}
+    ${loadMoreGrid(recentProducts)}
+    ${qcChecklistSection("New product QC checklist")}
+    ${internalLinkList([
+      { href: "/finds/", label: "Brand and category finds" },
+      { href: "/keywords/", label: "Long-tail keyword pages" },
+      { href: "/blog/how-to-use-a-reps-spreadsheet-safely/", label: "Spreadsheet safety guide" }
+    ])}
+  `,
+  schema: schemaOrg("CollectionPage", { name: "New W2C Finds" })
+}));
+pageUrls.push("/new-finds/");
+
+const keywordLandingPages = [
+  { slug: "nike-sneaker-reps", title: "Nike Sneaker Reps", terms: ["nike", "sneaker"], fallback: "/brands/nike/", description: "Compare Nike sneaker reps with W2C links, QC photos, product IDs, prices, and buying routes." },
+  { slug: "adidas-samba-reps", title: "Adidas Samba Reps", terms: ["adidas", "samba"], fallback: "/brands/adidas/", description: "Browse Adidas Samba reps, QC photos, W2C links, and similar Adidas sneaker finds." },
+  { slug: "louis-vuitton-bag-reps", title: "Louis Vuitton Bag Reps", terms: ["louis vuitton", "bag"], fallback: "/brands/louis-vuitton/", description: "Find Louis Vuitton bag reps with QC photos, product IDs, W2C links, and buying options." },
+  { slug: "dior-sneaker-reps", title: "Dior Sneaker Reps", terms: ["dior", "sneaker"], fallback: "/brands/dior/", description: "Compare Dior sneaker reps with QC photos, source IDs, W2C links, prices, and product pages." },
+  { slug: "gucci-t-shirt-reps", title: "Gucci T-Shirt Reps", terms: ["gucci", "t-shirt"], fallback: "/brands/gucci/", description: "Browse Gucci T-shirt reps with QC photos, W2C links, item IDs, prices, and product pages." },
+  { slug: "black-hoodie-reps", title: "Black Hoodie Reps", terms: ["hoodie"], fallback: "/categories/hoodies/", description: "Explore black hoodie and streetwear hoodie reps with QC photo checks, W2C links, prices, and product pages." },
+  { slug: "designer-shoes-qc-photos", title: "Designer Shoes QC Photos", terms: ["designer-shoes"], fallback: "/categories/designer-shoes/", description: "Review designer shoes QC photos, W2C links, brand pages, prices, and product routes." },
+  { slug: "best-sneaker-reps-spreadsheet", title: "Best Sneaker Reps Spreadsheet", terms: ["sneaker"], fallback: "/categories/sneakers/", description: "Compare sneaker reps spreadsheet finds with QC photos, W2C links, item IDs, prices, and US or Europe buying notes." },
+  { slug: "nike-dunk-low-reps", title: "Nike Dunk Low Reps", terms: ["nike", "dunk"], fallback: "/brands/nike/", description: "Browse Nike Dunk Low reps with QC photos, W2C links, seller item IDs, prices, and product routes." },
+  { slug: "nike-air-force-1-reps", title: "Nike Air Force 1 Reps", terms: ["nike", "air force"], fallback: "/brands/nike/", description: "Compare Nike Air Force 1 reps with QC photos, source links, item IDs, prices, and buying options." },
+  { slug: "adidas-yeezy-reps", title: "Adidas Yeezy Reps", terms: ["adidas", "yeezy"], fallback: "/brands/adidas/", description: "Find Adidas Yeezy reps with QC photo checks, W2C links, sneaker sizing notes, prices, and product pages." },
+  { slug: "gucci-bag-reps", title: "Gucci Bag Reps", terms: ["gucci", "bag"], fallback: "/brands/gucci/", description: "Browse Gucci bag reps with QC photos, hardware checks, W2C links, item IDs, prices, and product pages." },
+  { slug: "louis-vuitton-sneaker-reps", title: "Louis Vuitton Sneaker Reps", terms: ["louis vuitton", "sneaker"], fallback: "/brands/louis-vuitton/", description: "Compare Louis Vuitton sneaker reps with QC photos, shape checks, W2C links, prices, and product pages." },
+  { slug: "dior-bag-reps", title: "Dior Bag Reps", terms: ["dior", "bag"], fallback: "/brands/dior/", description: "Review Dior bag reps with QC photo checks, logo placement notes, item IDs, W2C links, and prices." },
+  { slug: "designer-hoodie-reps", title: "Designer Hoodie Reps", terms: ["hoodie"], fallback: "/categories/hoodies/", description: "Explore designer hoodie reps with QC photos, print placement checks, sizing notes, W2C links, and product pages." },
+  { slug: "streetwear-t-shirt-reps", title: "Streetwear T-Shirt Reps", terms: ["t-shirt"], fallback: "/categories/tshirts/", description: "Browse streetwear T-shirt reps with QC photos, print checks, brand pages, prices, W2C links, and product pages." },
+  { slug: "designer-belt-reps", title: "Designer Belt Reps", terms: ["belt"], fallback: "/categories/other-accessories/", description: "Compare designer belt reps with QC photos, buckle details, material checks, item IDs, W2C links, and prices." },
+  { slug: "rep-shoes-with-qc-photos", title: "Rep Shoes with QC Photos", terms: ["shoe"], fallback: "/categories/designer-shoes/", description: "Find rep shoes with QC photos, W2C links, sizing checks, source item IDs, prices, and product pages." },
+  { slug: "w2c-sneakers-for-us-buyers", title: "W2C Sneakers for US Buyers", terms: ["sneaker"], fallback: "/categories/sneakers/", description: "Browse W2C sneakers for US buyers with QC photos, item IDs, prices, route notes, and product comparisons." },
+  { slug: "w2c-streetwear-for-europe-buyers", title: "W2C Streetwear for Europe Buyers", terms: ["hoodie"], fallback: "/categories/hoodies/", description: "Use this W2C streetwear page for Europe buyers comparing QC photos, product IDs, and category pages." },
+  { slug: "cheap-streetwear-finds", title: "Cheap Streetwear Finds", terms: ["t-shirt"], fallback: "/categories/tshirts/", description: "Compare affordable streetwear finds with QC photos, prices, W2C links, item IDs, and brand pages." },
+  { slug: "qc-photo-checklist-for-reps", title: "QC Photo Checklist for Reps", terms: ["sneaker"], fallback: "/blog/how-to-use-qc-photos-before-buying-streetwear/", description: "Use this QC photo checklist for reps to compare images, material, shape, stitching, labels, sizing, and W2C links." }
+];
+
+write("keywords/index.html", layout({
+  title: "Long-Tail Keywords | Reps Spreadsheet, W2C Finds and QC Photos",
+  description: "Browse long-tail keyword pages for Nike sneaker reps, Adidas Samba reps, Louis Vuitton bags, Dior sneakers, Gucci tees, QC photos, and W2C finds.",
+  canonical: `${config.siteUrl}/keywords/`,
+  h1: "Long-Tail Keyword Pages",
+  content: cardGrid(keywordLandingPages.map((page) => {
+    const items = searchProducts(page.terms, 12);
+    return {
+      href: `/keywords/${page.slug}/`,
+      label: page.title,
+      meta: `${items.length || "Curated"} related finds`,
+      image: items[0]?.image || productRecords[0]?.image,
+      alt: `${page.title} QC photos`
+    };
+  })),
+  schema: schemaOrg("CollectionPage", { name: "Long-Tail Keyword Pages" })
+}));
+pageUrls.push("/keywords/");
+
+keywordLandingPages.forEach((page) => {
+  let items = searchProducts(page.terms, 96);
+  if (!items.length && page.fallback.startsWith("/brands/")) {
+    const brandSlug = page.fallback.split("/").filter(Boolean).pop();
+    const brandEntry = topBrands.find(([brand]) => slugify(brand) === brandSlug);
+    items = brandEntry?.[1]?.slice(0, 96) || [];
+  }
+  if (!items.length && page.fallback.startsWith("/categories/")) {
+    const categorySlug = page.fallback.split("/").filter(Boolean).pop();
+    items = byCategory.get(categorySlug)?.slice(0, 96) || [];
+  }
+  if (!items.length) items = productRecords.slice(0, 96);
+
+  write(`keywords/${page.slug}/index.html`, layout({
+    title: `${page.title} | W2C Links and QC Photos`,
+    description: page.description,
+    canonical: `${config.siteUrl}/keywords/${page.slug}/`,
+    h1: `${page.title}: W2C Links and QC Photos`,
+    content: `
+      <section class="seo-copy">
+        <h2>${escapeHtml(page.title)} buying intent</h2>
+        <p>${escapeHtml(page.description)} This page is built for shoppers comparing product photos, item IDs, prices, categories, and buying routes before choosing a product page.</p>
+      </section>
+      ${buyerProcessSection(page.title)}
+      ${qcChecklistSection(`${page.title} QC checklist`)}
+      ${loadMoreGrid(items)}
+      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
+        { href: page.fallback, label: `Main ${page.title} page` },
+        { href: "/finds/", label: "Brand and category W2C finds" },
+        { href: "/new-finds/", label: "New W2C finds" },
+        { href: "/blog/how-to-use-a-reps-spreadsheet-safely/", label: "How to use a reps spreadsheet safely" }
+      ])}</section>
+      ${faqSection()}
+    `,
+    schema: [schemaOrg("CollectionPage", { name: page.title, about: page.title }), faqSchema()]
+  }));
+  pageUrls.push(`/keywords/${page.slug}/`);
 });
 
 productRecords.forEach((product) => {
@@ -621,7 +926,8 @@ const simplePages = [
   ["privacy-policy", "Privacy Policy", "This privacy policy explains basic analytics, contact email handling, and site usage data for qcfindgo visitors."],
   ["terms", "Terms of Use", "These terms explain how visitors can use qcfindgo as a product discovery and QC finder website."],
   ["shipping", "Shipping Notes", "qcfindgo is a product discovery website. Shipping times, fees, and routes depend on the selected agent or source listing."],
-  ["returns", "Returns and Refunds", "qcfindgo does not process orders directly. Return and refund policies depend on the selected agent, seller, or purchase platform."]
+  ["returns", "Returns and Refunds", "qcfindgo does not process orders directly. Return and refund policies depend on the selected agent, seller, or purchase platform."],
+  ["qc-disclaimer", "QC Finder Disclaimer", "qcfindgo is an independent product discovery and QC photo research website. Brand names are used only to organize search, comparison, and buyer research pages."]
 ];
 
 simplePages.forEach(([slug, title, description]) => {
@@ -639,13 +945,27 @@ simplePages.forEach(([slug, title, description]) => {
 const keywordRows = [
   ["keyword","type","intent","target_page","priority","notes"],
   ["nike sneaker qc photos","brand","commercial","/brands/nike/","high","US and Europe sneaker discovery"],
+  ["nike dunk low reps","long-tail","commercial","/keywords/nike-dunk-low-reps/","high","Dedicated keyword landing page"],
   ["adidas samba qc finder","brand","commercial","/brands/adidas/","high","Long-tail Adidas sneaker query"],
+  ["adidas samba reps","long-tail","commercial","/keywords/adidas-samba-reps/","high","Dedicated keyword landing page"],
+  ["adidas yeezy reps","long-tail","commercial","/keywords/adidas-yeezy-reps/","medium","Dedicated keyword landing page"],
   ["louis vuitton bag qc photos","brand","commercial","/brands/louis-vuitton/","high","Designer bag QC page"],
+  ["louis vuitton sneaker reps","long-tail","commercial","/keywords/louis-vuitton-sneaker-reps/","medium","Dedicated keyword landing page"],
   ["dior sneakers qc finder","brand","commercial","/brands/dior/","high","Dior was provided as DIRO; site uses Dior"],
+  ["dior bag reps","long-tail","commercial","/keywords/dior-bag-reps/","medium","Dedicated keyword landing page"],
   ["gucci t shirt qc photos","brand","commercial","/brands/gucci/","high","Designer apparel long-tail"],
+  ["gucci bag reps","long-tail","commercial","/keywords/gucci-bag-reps/","medium","Dedicated keyword landing page"],
   ["streetwear sneakers qc","core","commercial","/categories/sneakers/","high","Category page"],
   ["designer shoes qc photos","core","commercial","/categories/designer-shoes/","high","Category page"],
+  ["rep shoes with qc photos","long-tail","commercial","/keywords/rep-shoes-with-qc-photos/","high","Dedicated keyword landing page"],
   ["streetwear hoodie qc finder","core","commercial","/categories/hoodies/","medium","Category page"],
+  ["designer hoodie reps","long-tail","commercial","/keywords/designer-hoodie-reps/","medium","Dedicated keyword landing page"],
+  ["streetwear t shirt reps","long-tail","commercial","/keywords/streetwear-t-shirt-reps/","medium","Dedicated keyword landing page"],
+  ["best sneaker reps spreadsheet","long-tail","research","/keywords/best-sneaker-reps-spreadsheet/","high","Competitor comparison query"],
+  ["w2c sneakers for us buyers","long-tail","commercial","/keywords/w2c-sneakers-for-us-buyers/","high","US buyer landing page"],
+  ["w2c streetwear for europe buyers","long-tail","commercial","/keywords/w2c-streetwear-for-europe-buyers/","high","Europe buyer landing page"],
+  ["cheap streetwear finds","long-tail","commercial","/keywords/cheap-streetwear-finds/","medium","Price-sensitive discovery query"],
+  ["qc photo checklist for reps","informational","research","/keywords/qc-photo-checklist-for-reps/","high","Informational support page"],
   ["how to use qc photos","informational","research","/blog/how-to-use-qc-photos-before-buying-streetwear/","high","Blog guide"],
   ["best streetwear sneakers us europe","informational","research","/blog/best-streetwear-sneakers-for-us-and-europe-buyers/","medium","Blog guide"]
 ];
@@ -665,6 +985,17 @@ write("seo/seo-plan.md", `# qcfindgo SEO Execution Plan
 3. Publish two English guides per week under /blog/.
 4. Improve product copy for top 100 products by clicks or impressions.
 5. Build social profiles and 5-10 safe citations after indexing begins.
+
+## Long-Tail Page Map
+- /finds/ is the discovery hub for brand + category combinations.
+- /new-finds/ highlights recently imported products so Google sees fresh crawl paths.
+- /keywords/ collects high-intent terms such as nike dunk low reps, best sneaker reps spreadsheet, rep shoes with QC photos, and W2C sneakers for US buyers.
+- /qc-disclaimer/ explains the site's role as an independent QC finder and improves trust signals.
+
+## Google Search Console Workflow
+- Resubmit https://qcfindgo.com/sitemap.xml after each product import or SEO generation.
+- Manually request indexing for the homepage, /new-finds/, /finds/nike-sneakers/, /keywords/nike-dunk-low-reps/, and /keywords/best-sneaker-reps-spreadsheet/.
+- Wait 24-72 hours before judging coverage reports. GSC processing can lag even when live URL tests pass.
 
 ## Weekly Content Cadence
 - 1 brand or category guide

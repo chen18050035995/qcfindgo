@@ -158,6 +158,42 @@ module.exports = {
       title: "Gucci Reps Spreadsheet Guide",
       keyword: "Gucci reps spreadsheet",
       description: "Compare Gucci reps across T-shirts, shoes, bags, accessories, QC photos, W2C links, prices, and agent-ready product pages."
+    },
+    {
+      slug: "nike-dunk-low-reps-qc-guide",
+      title: "Nike Dunk Low Reps QC Guide",
+      keyword: "Nike Dunk Low reps QC guide",
+      description: "Review Nike Dunk Low reps with QC photo checks for toe box shape, swoosh placement, heel tab, sole color, W2C links, and agent routes."
+    },
+    {
+      slug: "best-designer-bag-reps-for-europe-buyers",
+      title: "Best Designer Bag Reps for Europe Buyers",
+      keyword: "designer bag reps Europe buyers",
+      description: "Compare designer bag reps for Europe buyers with QC photos, hardware checks, shipping route notes, item IDs, W2C links, and agent prices."
+    },
+    {
+      slug: "streetwear-hoodie-sizing-guide",
+      title: "Streetwear Hoodie Sizing Guide for US and Europe",
+      keyword: "streetwear hoodie sizing guide",
+      description: "Use this streetwear hoodie sizing guide to compare oversized fits, length, chest width, fabric weight, QC photos, W2C links, and agent notes."
+    },
+    {
+      slug: "how-to-check-designer-shoes-qc-photos",
+      title: "How to Check Designer Shoes QC Photos",
+      keyword: "designer shoes QC photos checklist",
+      description: "Learn how to check designer shoes QC photos for toe shape, sole profile, stitching, logo placement, materials, sizing, W2C links, and agents."
+    },
+    {
+      slug: "w2c-streetwear-finds-for-us-buyers",
+      title: "W2C Streetwear Finds for US Buyers",
+      keyword: "W2C streetwear finds US buyers",
+      description: "Browse W2C streetwear finds for US buyers with QC photos, agent prices, shipping route checks, product IDs, sneakers, hoodies, and bags."
+    },
+    {
+      slug: "rep-spreadsheet-keywords-to-search",
+      title: "Rep Spreadsheet Keywords to Search",
+      keyword: "rep spreadsheet keywords",
+      description: "Use these rep spreadsheet keywords to search for sneaker reps, hoodie reps, designer bag reps, QC photos, W2C links, and agent-ready finds."
     }
   ]
 };

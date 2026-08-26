@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>QC Finder & Reps Spreadsheet | W2C Finds and Agent Prices</title>
+    <title>Streetwear QC Finder | Sneakers, Designer Brands - qcfindgo</title>
     <meta
       name="description"
-      content="qcfindgo helps US and Europe shoppers browse reps spreadsheets, W2C finds, QC photos, agent prices, sneakers, and designer streetwear."
+      content="qcfindgo helps US and Europe shoppers browse streetwear QC photos, sneakers, designer brands, agent links, and product discovery pages."
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#080a14" />
     <link rel="canonical" href="https://qcfindgo.com/" />
-    <meta property="og:title" content="QC Finder & Reps Spreadsheet | qcfindgo" />
-    <meta property="og:description" content="Browse W2C finds, QC photos, agent prices, sneakers, streetwear apparel, designer brands, and agent-ready product pages." />
+    <meta property="og:title" content="Streetwear QC Finder | qcfindgo" />
+    <meta property="og:description" content="Browse QC-style product photos for sneakers, streetwear apparel, designer brands, and agent-ready product finds." />
     <meta property="og:url" content="https://qcfindgo.com/" />
     <meta property="og:type" content="website" />
-    <link rel="stylesheet" href="styles.css?v=20260823a" />
+    <link rel="stylesheet" href="styles.css?v=20260825b" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -39,10 +39,6 @@
       <nav class="main-nav" aria-label="Main navigation">
         <a href="/brands/">Brands</a>
         <a href="/categories/">Categories</a>
-        <a href="/finds/">Finds</a>
-        <a href="/keywords/">Keywords</a>
-        <a href="/agents/">Agents</a>
-        <a href="/compare/">Compare</a>
         <a href="/blog/">Guides</a>
         <a href="#search">QC Finder</a>
       </nav>
@@ -57,7 +53,7 @@
     <main>
       <section class="finder" id="search" aria-labelledby="finder-title">
         <div class="search-glow" aria-hidden="true"></div>
-        <h1 id="finder-title">QC Finder and reps spreadsheet for W2C finds, QC photos, and agent prices.</h1>
+        <h1 id="finder-title">Streetwear QC finder for sneakers and designer brand finds.</h1>
         <form class="search-box" id="search-form" role="search">
           <span class="search-icon" aria-hidden="true">Q</span>
           <input id="search-input" type="search" placeholder="Search brand, category, item ID, or keyword..." autocomplete="off" />
@@ -69,8 +65,8 @@
           <button type="button" data-mode-search="name">Search Name</button>
         </div>
         <p class="intro-copy">
-          Browse W2C finds, QC photos, item IDs, agent prices, and source links for Nike, Adidas, Louis Vuitton, Dior, Gucci,
-          sneaker reps, designer shoes, hoodies, T-shirts, bags, and streetwear accessories.
+          Browse QC-style product photos, item IDs, prices, and source links for Nike, Adidas, Louis Vuitton, Dior, Gucci,
+          sneakers, designer shoes, hoodies, T-shirts, bags, and accessories.
         </p>
         <dl class="stats" aria-label="Catalog statistics">
           <div><dt id="product-count">0</dt><dd>items</dd></div>
@@ -83,35 +79,38 @@
       <section class="matrix" id="categories" aria-labelledby="category-title">
         <div class="matrix-label active">
           <span class="grid-icon">#</span>
-          <strong><a href="/categories/">All Categories</a></strong>
+          <strong id="category-title"><a href="/categories/">All Categories</a></strong>
         </div>
-        <div class="icon-grid" id="category-grid"></div>
+        <div class="icon-rail" id="category-grid"></div>
       </section>
 
       <section class="matrix" aria-labelledby="brand-title">
         <div class="matrix-label active">
           <span class="grid-icon">B</span>
-          <strong><a href="/brands/">All Brands</a></strong>
+          <strong id="brand-title"><a href="/brands/">All Brands</a></strong>
         </div>
-        <div class="icon-grid brand-grid" id="brand-grid"></div>
+        <div class="icon-rail brand-grid" id="brand-grid"></div>
       </section>
 
       <section class="matrix" id="resources" aria-labelledby="agent-title">
         <div class="matrix-label active">
           <span class="grid-icon">A</span>
-          <strong>All Agents</strong>
+          <strong id="agent-title">All Agents</strong>
         </div>
-        <div class="icon-grid agent-grid" id="agent-grid"></div>
+        <div class="icon-rail agent-grid" id="agent-grid"></div>
+      </section>
+
+      <section class="product-showcases" aria-labelledby="showcase-title">
+        <div class="showcase-head">
+          <h2 id="showcase-title">Fresh QC product finds</h2>
+          <span id="showcase-updated">Updates hourly</span>
+        </div>
+        <div id="showcase-grid" class="showcase-stack"></div>
       </section>
 
       <section class="seo-strip" aria-labelledby="seo-pages-title">
         <h2 id="seo-pages-title">Popular QC finder pages</h2>
         <div class="seo-link-grid">
-          <a href="/new-finds/">New W2C Finds</a>
-          <a href="/finds/">Brand and Category Finds</a>
-          <a href="/keywords/">Long-Tail Keyword Pages</a>
-          <a href="/keywords/nike-sneaker-reps/">Nike Sneaker Reps</a>
-          <a href="/keywords/best-sneaker-reps-spreadsheet/">Best Sneaker Reps Spreadsheet</a>
           <a href="/categories/sneakers/">Sneaker QC Finds</a>
           <a href="/categories/hoodies/">Streetwear Hoodie QC Finds</a>
           <a href="/brands/nike/">Nike QC Finds</a>
@@ -121,26 +120,6 @@
           <a href="/brands/gucci/">Gucci QC Finds</a>
           <a href="/blog/how-to-use-qc-photos-before-buying-streetwear/">How to Use QC Photos</a>
         </div>
-      </section>
-
-      <section class="seo-strip" aria-labelledby="how-title">
-        <h2 id="how-title">How to use qcfindgo for W2C research</h2>
-        <ol>
-          <li>Search a brand, category, item ID, or long-tail keyword such as Nike Dunk Low reps or designer bag QC photos.</li>
-          <li>Open several product pages and compare QC-style images, prices, source item IDs, and related category links.</li>
-          <li>Use the agent button only after checking service fees, shipping route, delivery timing, and final landed cost.</li>
-          <li>Save similar finds before ordering so you can compare sizing, materials, logo placement, and product photos.</li>
-        </ol>
-      </section>
-
-      <section class="seo-strip" aria-labelledby="checklist-title">
-        <h2 id="checklist-title">QC checklist before opening a source listing</h2>
-        <ul>
-          <li>For sneakers, compare toe box, sole shape, heel tab, panel alignment, logo placement, and sizing notes.</li>
-          <li>For hoodies and T-shirts, check print placement, fabric weight, tags, color tone, measurements, and fit.</li>
-          <li>For bags and accessories, review stitching, hardware, logo position, material texture, strap shape, and item ID.</li>
-          <li>For US and Europe buyers, compare agent routes, estimated shipping time, customs notes, and final landed cost.</li>
-        </ul>
       </section>
 
       <section class="seo-strip" aria-labelledby="trust-title">
@@ -154,7 +133,6 @@
           <a href="/contact/">Contact</a>
           <a href="/shipping/">Shipping Notes</a>
           <a href="/returns/">Returns</a>
-          <a href="/qc-disclaimer/">QC Disclaimer</a>
           <a href="/privacy-policy/">Privacy Policy</a>
           <a href="/terms/">Terms</a>
         </div>
@@ -170,6 +148,6 @@
     </main>
 
     <script src="products.js?v=20260728a"></script>
-    <script src="script.js?v=20260823a"></script>
+    <script src="script.js?v=20260824a"></script>
   </body>
 </html>

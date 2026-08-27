@@ -39,11 +39,10 @@ const truncate = (value, max) => {
 const mainSiteUrl = String(config.mainSiteUrl || "https://www.novafindsgo.com").replace(/\/+$/, "");
 const mainSiteProductUrl = (product = {}) => {
   const params = new URLSearchParams({
-    ref: "qcfindgo",
-    item: String(product.sourceItemId || ""),
-    q: String(product.title || product._brand || "streetwear find")
+    id: String(product.sourceItemId || ""),
+    ref: "qcfindgo"
   });
-  return `${mainSiteUrl}/?${params.toString()}`;
+  return `${mainSiteUrl}/product?${params.toString()}`;
 };
 
 const loadProducts = () => {

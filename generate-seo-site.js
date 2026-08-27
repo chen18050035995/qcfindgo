@@ -36,6 +36,16 @@ const truncate = (value, max) => {
   return text.length <= max ? text : `${text.slice(0, max - 1).trim()}…`;
 };
 
+const mainSiteUrl = String(config.mainSiteUrl || "https://www.novafindsgo.com").replace(/\/+$/, "");
+const mainSiteProductUrl = (product = {}) => {
+  const params = new URLSearchParams({
+    ref: "qcfindgo",
+    item: String(product.sourceItemId || ""),
+    q: String(product.title || product._brand || "streetwear find")
+  });
+  return `${mainSiteUrl}/?${params.toString()}`;
+};
+
 const loadProducts = () => {
   const code = fs.readFileSync(path.join(root, "products.js"), "utf8");
   const sandbox = { window: {} };
@@ -101,6 +111,7 @@ const nav = `
       <a href="/categories/sneakers/">Sneakers</a>
       <a href="/categories/hoodies/">Hoodies</a>
       <a href="/brands/nike/">Nike</a>
+      <a href="${escapeHtml(mainSiteUrl)}" rel="noopener noreferrer" target="_blank">Shop Nova</a>
     </nav>
   </header>`;
 
@@ -343,8 +354,17 @@ const renderBuyPanel = (product) => {
   const agents = agentEntries(product);
   const price = product.priceCny || product.price || "Check agent";
   const sourceUrl = product.url || "/";
+  const novaUrl = mainSiteProductUrl(product);
   const list = agents.length ? agents : [["Original listing", sourceUrl]];
   return `
+    <section class="order-routing" aria-label="Order on Nova Finds Go">
+      <div>
+        <p class="eyebrow">Ready to order or ask about this item?</p>
+        <h2>Continue on Nova Finds Go</h2>
+        <p>qcfindgo is the SEO and QC research page. Use Nova Finds Go for product search, support, and order inquiries. Keep this item ID ready: <strong>${escapeHtml(product.sourceItemId || "Check listing")}</strong>.</p>
+      </div>
+      <a class="nova-buy-link" href="${escapeHtml(novaUrl)}" rel="noopener noreferrer" target="_blank">View / Buy on Nova Finds Go</a>
+    </section>
     <div class="buy-actions">
       <button class="buy-primary" type="button" data-open-agent-modal>Buy with agent</button>
       <a class="source-link" href="${escapeHtml(sourceUrl)}" rel="nofollow sponsored noopener noreferrer" target="_blank">Open original listing</a>
@@ -534,6 +554,16 @@ const trustSection = `
     <p>For site questions or corrections, contact <a href="mailto:${escapeHtml(config.contactEmail)}">${escapeHtml(config.contactEmail)}</a>. You can also review our <a href="/about/">About</a>, <a href="/shipping/">Shipping Notes</a>, and <a href="/returns/">Returns and Refunds</a> pages.</p>
   </section>`;
 
+const shopCtaSection = `
+  <section class="conversion-strip">
+    <div>
+      <p class="eyebrow">Orders and inquiries</p>
+      <h2>Use qcfindgo to discover, then Nova Finds Go to order</h2>
+      <p>qcfindgo is built for Google discovery, QC photo research, and long-tail product pages. When you are ready to search an item ID, ask support, or continue checkout, open Nova Finds Go.</p>
+    </div>
+    <a class="shop-cta" href="${escapeHtml(mainSiteUrl)}" rel="noopener noreferrer" target="_blank">Shop on Nova Finds Go</a>
+  </section>`;
+
 write("brands/index.html", layout({
   title: "Streetwear Brands QC Finder | Nike, Adidas, LV, Dior, Gucci",
   description: "Browse streetwear and designer brand finds with QC-style product photos, category links, agent links, and product discovery pages.",
@@ -564,6 +594,7 @@ topBrands.slice(0, 80).forEach(([brand, items]) => {
       </section>
       ${buyerProcessSection(`${brand} QC finds`)}
       ${qcChecklistSection(`${brand} QC checklist`)}
+      ${shopCtaSection}
       ${cardGrid(productCardItems(items))}
       <section class="seo-copy"><h2>Related categories</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p>${internalLinkList([{ href: "/categories/sneakers/", label: "Sneaker QC finds" }, { href: "/categories/hoodies/", label: "Hoodie QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
       ${faqSection()}
@@ -604,6 +635,7 @@ topCategories.forEach(([category, items]) => {
       </section>
       ${buyerProcessSection(`${label.toLowerCase()} QC finds`)}
       ${qcChecklistSection(`${label} QC checklist`)}
+      ${shopCtaSection}
       ${loadMoreGrid(items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([{ href: "/brands/nike/", label: "Nike QC finds" }, { href: "/brands/adidas/", label: "Adidas QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
       ${faqSection()}
@@ -677,6 +709,7 @@ brandCategoryPairs.slice(0, 180).forEach((pair) => {
       </section>
       ${buyerProcessSection(`${pair.brand} ${label.toLowerCase()} reps`)}
       ${qcChecklistSection(`${pair.brand} ${label} QC checklist`)}
+      ${shopCtaSection}
       ${loadMoreGrid(pair.items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
         { href: `/brands/${brandSlug}/`, label: `${pair.brand} QC finds` },
@@ -706,6 +739,7 @@ write("new-finds/index.html", layout({
     ${buyerProcessSection("new W2C finds")}
     ${loadMoreGrid(recentProducts)}
     ${qcChecklistSection("New product QC checklist")}
+    ${shopCtaSection}
     ${internalLinkList([
       { href: "/finds/", label: "Brand and category finds" },
       { href: "/keywords/", label: "Long-tail keyword pages" },
@@ -746,7 +780,7 @@ write("keywords/index.html", layout({
   description: "Browse long-tail keyword pages for Nike sneaker reps, Adidas Samba reps, Louis Vuitton bags, Dior sneakers, Gucci tees, QC photos, and W2C finds.",
   canonical: `${config.siteUrl}/keywords/`,
   h1: "Long-Tail Keyword Pages",
-  content: cardGrid(keywordLandingPages.map((page) => {
+  content: `${shopCtaSection}${cardGrid(keywordLandingPages.map((page) => {
     const items = searchProducts(page.terms, 12);
     return {
       href: `/keywords/${page.slug}/`,
@@ -755,7 +789,7 @@ write("keywords/index.html", layout({
       image: items[0]?.image || productRecords[0]?.image,
       alt: `${page.title} QC photos`
     };
-  })),
+  }))}`,
   schema: schemaOrg("CollectionPage", { name: "Long-Tail Keyword Pages" })
 }));
 pageUrls.push("/keywords/");
@@ -785,6 +819,7 @@ keywordLandingPages.forEach((page) => {
       </section>
       ${buyerProcessSection(page.title)}
       ${qcChecklistSection(`${page.title} QC checklist`)}
+      ${shopCtaSection}
       ${loadMoreGrid(items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
         { href: page.fallback, label: `Main ${page.title} page` },
@@ -891,6 +926,7 @@ config.blogPosts.forEach((post) => {
           <li>Save multiple similar products before making a final choice.</li>
         </ul>
       </article>
+      ${shopCtaSection}
       ${cardGrid(productCardItems(relatedProducts))}
     `,
     schema: schemaOrg("Article", {
@@ -936,7 +972,7 @@ simplePages.forEach(([slug, title, description]) => {
     description,
     canonical: `${config.siteUrl}/${slug}/`,
     h1: title,
-    content: `<section class="seo-copy"><p>${escapeHtml(description)}</p><p>Email: <a href="mailto:${escapeHtml(config.contactEmail)}">${escapeHtml(config.contactEmail)}</a></p><p>Browse <a href="/brands/">brand QC finds</a>, <a href="/categories/">streetwear categories</a>, and <a href="/blog/">QC guides</a>.</p></section>`,
+  content: `<section class="seo-copy"><p>${escapeHtml(description)}</p><p>Email: <a href="mailto:${escapeHtml(config.contactEmail)}">${escapeHtml(config.contactEmail)}</a></p><p>Browse <a href="/brands/">brand QC finds</a>, <a href="/categories/">streetwear categories</a>, and <a href="/blog/">QC guides</a>.</p></section>${shopCtaSection}`,
     schema: schemaOrg("WebPage", { name: title, description })
   }));
   pageUrls.push(`/${slug}/`);

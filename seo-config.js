@@ -1,6 +1,7 @@
 module.exports = {
   siteName: "qcfindgo",
   siteUrl: "https://qcfindgo.com",
+  mainSiteUrl: "https://www.novafindsgo.com",
   contactEmail: "18050035995@163.com",
   targetMarkets: "United States and Europe",
   primaryCategories: ["sneakers", "hoodies", "tshirts", "designer-shoes", "designer-bags"],

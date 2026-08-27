@@ -919,6 +919,62 @@ main {
   font-weight: 850;
 }
 
+.order-routing,
+.conversion-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid rgba(182, 255, 34, 0.32);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(182, 255, 34, 0.12), rgba(71, 91, 255, 0.08)),
+    #111623;
+  margin: 18px 0;
+  padding: 18px;
+}
+
+.order-routing h2,
+.conversion-strip h2 {
+  margin: 4px 0 8px;
+  font-size: 22px;
+}
+
+.order-routing p,
+.conversion-strip p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.order-routing strong {
+  color: var(--fg);
+}
+
+.nova-buy-link,
+.shop-cta {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(182, 255, 34, 0.68);
+  border-radius: 8px;
+  background: #b6ff22;
+  color: #071100;
+  font-size: 14px;
+  font-weight: 950;
+  padding: 12px 18px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nova-buy-link:hover,
+.nova-buy-link:focus-visible,
+.shop-cta:hover,
+.shop-cta:focus-visible {
+  transform: translateY(-1px);
+}
+
 body.modal-open {
   overflow: hidden;
 }
@@ -1367,8 +1423,15 @@ body.modal-open {
     flex-direction: column;
   }
 
+  .order-routing,
+  .conversion-strip {
+    grid-template-columns: 1fr;
+  }
+
   .buy-primary,
-  .source-link {
+  .source-link,
+  .nova-buy-link,
+  .shop-cta {
     width: 100%;
   }
 

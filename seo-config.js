@@ -20,6 +20,13 @@ module.exports = {
   ],
   comparePages: [
     {
+      slug: "oopbuy-vs-superbuy",
+      title: "Oopbuy vs Superbuy",
+      keyword: "Oopbuy vs Superbuy",
+      agents: ["Oopbuy", "Superbuy"],
+      description: "Compare Oopbuy and Superbuy for sneaker reps, streetwear finds, QC photo workflow, W2C links, and US or Europe buyer routes."
+    },
+    {
       slug: "kakobuy-vs-oopbuy",
       title: "Kakobuy vs Oopbuy",
       keyword: "Kakobuy vs Oopbuy",
@@ -195,6 +202,18 @@ module.exports = {
       title: "Rep Spreadsheet Keywords to Search",
       keyword: "rep spreadsheet keywords",
       description: "Use these rep spreadsheet keywords to search for sneaker reps, hoodie reps, designer bag reps, QC photos, W2C links, and agent-ready finds."
+    },
+    {
+      slug: "loro-piana-spreadsheet-qc-finds",
+      title: "Loro Piana Spreadsheet QC Finds",
+      keyword: "Loro Piana spreadsheet",
+      description: "Use this Loro Piana spreadsheet guide to compare quiet luxury shoes, knitwear, bags, QC photos, item IDs, W2C links, and buying routes."
+    },
+    {
+      slug: "nike-qc-finder-guide",
+      title: "Nike QC Finder Guide",
+      keyword: "Nike QC",
+      description: "Use this Nike QC finder guide to compare sneaker QC photos, shape checks, item IDs, W2C links, and Nova Finds Go order routes."
     }
   ]
 };

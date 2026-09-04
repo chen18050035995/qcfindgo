@@ -438,9 +438,11 @@ const pageUrls = ["/"];
 
 [
   "about",
+  "agents",
   "blog",
   "brands",
   "categories",
+  "compare",
   "contact",
   "finds",
   "keywords",
@@ -457,6 +459,8 @@ const pageUrls = ["/"];
 
 ensureDir("brands");
 ensureDir("categories");
+ensureDir("agents");
+ensureDir("compare");
 ensureDir("finds");
 ensureDir("keywords");
 ensureDir("new-finds");
@@ -524,9 +528,16 @@ const faqSchema = (items = faqItems) => schemaOrg("FAQPage", {
   }))
 });
 
+const qcChecklistHeading = (title) => {
+  const clean = String(title || "QC checklist").trim();
+  if (/\bQC checklist$/i.test(clean)) return clean;
+  if (/\bQC$/i.test(clean)) return `${clean} checklist`;
+  return `${clean} QC checklist`;
+};
+
 const qcChecklistSection = (title = "QC checklist") => `
   <section class="seo-copy">
-    <h2>${escapeHtml(title)}</h2>
+    <h2>${escapeHtml(qcChecklistHeading(title))}</h2>
     <ul>
       <li>Compare product photos with the expected retail shape, color, and overall proportions.</li>
       <li>Check logo placement, print alignment, stitching, hardware, tags, and material texture.</li>
@@ -563,12 +574,36 @@ const shopCtaSection = `
     <a class="shop-cta" href="${escapeHtml(mainSiteUrl)}" rel="noopener noreferrer" target="_blank">Shop on Nova Finds Go</a>
   </section>`;
 
+const gscPriorityLinks = [
+  { href: "/keywords/qc-finder/", label: "qcfin / QC Finder" },
+  { href: "/keywords/qc-finds/", label: "QC Finds" },
+  { href: "/keywords/nike-qc/", label: "Nike QC" },
+  { href: "/keywords/loro-piana-spreadsheet/", label: "Loro Piana Spreadsheet" },
+  { href: "/compare/oopbuy-vs-superbuy/", label: "Oopbuy vs Superbuy" },
+  { href: "/keywords/bq-sneakers/", label: "BQ Sneakers" },
+  { href: "/keywords/best-sneaker-reps-spreadsheet/", label: "Sneaker Reps Spreadsheet" }
+];
+
+const searchIntentSection = (title, phrases = []) => `
+  <section class="seo-copy">
+    <h2>${escapeHtml(title)} search intent</h2>
+    <p>This page targets shoppers who are already comparing QC photos, spreadsheet-style finds, W2C links, item IDs, prices, and agent routes before moving to Nova Finds Go for order support.</p>
+    ${phrases.length ? `<p>Related searches covered: ${phrases.map(escapeHtml).join(", ")}.</p>` : ""}
+  </section>`;
+
+const priorityLinkSection = `
+  <section class="seo-copy">
+    <h2>Search Console priority pages</h2>
+    <p>These pages focus on early queries already appearing in Google Search Console, then connect visitors to stronger brand, category, guide, and product pages.</p>
+    ${internalLinkList(gscPriorityLinks)}
+  </section>`;
+
 write("brands/index.html", layout({
   title: "Streetwear Brands QC Finder | Nike, Adidas, LV, Dior, Gucci",
   description: "Browse streetwear and designer brand finds with QC-style product photos, category links, agent links, and product discovery pages.",
   canonical: `${config.siteUrl}/brands/`,
   h1: "Streetwear Brands QC Finder",
-  content: cardGrid(topBrands.slice(0, 60).map(([brand, items]) => ({
+  content: cardGrid(topBrands.map(([brand, items]) => ({
     href: `/brands/${slugify(brand)}/`,
     label: brand,
     meta: `${items.length} QC finds`,
@@ -579,7 +614,7 @@ write("brands/index.html", layout({
 }));
 pageUrls.push("/brands/");
 
-topBrands.slice(0, 80).forEach(([brand, items]) => {
+topBrands.forEach(([brand, items]) => {
   const slug = slugify(brand);
   write(`brands/${slug}/index.html`, layout({
     title: `${brand} QC Finds | Sneakers and Streetwear - qcfindgo`,
@@ -592,7 +627,7 @@ topBrands.slice(0, 80).forEach(([brand, items]) => {
         <p>Use this ${escapeHtml(brand)} page to compare QC-style product photos, titles, categories, prices, and agent links before opening a product page.</p>
       </section>
       ${buyerProcessSection(`${brand} QC finds`)}
-      ${qcChecklistSection(`${brand} QC checklist`)}
+      ${qcChecklistSection(brand)}
       ${shopCtaSection}
       ${cardGrid(productCardItems(items))}
       <section class="seo-copy"><h2>Related categories</h2><p>Browse sneakers, hoodies, T-shirts, designer shoes, bags, and accessories to build a stronger streetwear shortlist.</p>${internalLinkList([{ href: "/categories/sneakers/", label: "Sneaker QC finds" }, { href: "/categories/hoodies/", label: "Hoodie QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
@@ -633,7 +668,7 @@ topCategories.forEach(([category, items]) => {
         <p>Compare images, prices, item IDs, and brand signals before choosing a ${escapeHtml(label.toLowerCase())} find. Prioritize clear QC photos, consistent sizing information, and trusted agent pages.</p>
       </section>
       ${buyerProcessSection(`${label.toLowerCase()} QC finds`)}
-      ${qcChecklistSection(`${label} QC checklist`)}
+      ${qcChecklistSection(label)}
       ${shopCtaSection}
       ${loadMoreGrid(items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([{ href: "/brands/nike/", label: "Nike QC finds" }, { href: "/brands/adidas/", label: "Adidas QC finds" }, { href: "/finds/", label: "Brand and category W2C finds" }, { href: "/keywords/", label: "Long-tail keyword pages" }])}</section>
@@ -707,7 +742,7 @@ brandCategoryPairs.slice(0, 180).forEach((pair) => {
         <p>Search intent covered: ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} reps, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} spreadsheet, ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} QC photos, and ${escapeHtml(pair.brand)} ${escapeHtml(label.toLowerCase())} W2C links.</p>
       </section>
       ${buyerProcessSection(`${pair.brand} ${label.toLowerCase()} reps`)}
-      ${qcChecklistSection(`${pair.brand} ${label} QC checklist`)}
+      ${qcChecklistSection(`${pair.brand} ${label}`)}
       ${shopCtaSection}
       ${loadMoreGrid(pair.items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
@@ -737,7 +772,7 @@ write("new-finds/index.html", layout({
     </section>
     ${buyerProcessSection("new W2C finds")}
     ${loadMoreGrid(recentProducts)}
-    ${qcChecklistSection("New product QC checklist")}
+    ${qcChecklistSection("New product")}
     ${shopCtaSection}
     ${internalLinkList([
       { href: "/finds/", label: "Brand and category finds" },
@@ -749,7 +784,123 @@ write("new-finds/index.html", layout({
 }));
 pageUrls.push("/new-finds/");
 
+write("agents/index.html", layout({
+  title: "Agent Spreadsheet Pages | QC Finder Routes - qcfindgo",
+  description: "Compare agent spreadsheet pages for QC photos, W2C links, sneaker finds, streetwear products, shipping checks, and buyer routes.",
+  canonical: `${config.siteUrl}/agents/`,
+  h1: "Agent Spreadsheet Pages",
+  content: `
+    ${searchIntentSection("Agent spreadsheet", ["agent spreadsheet", "reps spreadsheet", "W2C spreadsheet", "QC photo agent"])}
+    ${cardGrid(config.agentPages.map((agent) => ({
+      href: `/agents/${agent.slug}/`,
+      label: `${agent.name} Spreadsheet Finds`,
+      meta: agent.keyword,
+      image: productRecords[0]?.image,
+      alt: `${agent.name} spreadsheet QC finds`
+    })))}
+    ${priorityLinkSection}
+  `,
+  schema: schemaOrg("CollectionPage", { name: "Agent Spreadsheet Pages" })
+}));
+pageUrls.push("/agents/");
+
+config.agentPages.forEach((agent) => {
+  const items = productRecords
+    .filter((product) => agentEntries(product).some(([name]) => slugify(name) === agent.slug))
+    .slice(0, 96);
+  const agentProducts = items.length ? items : productRecords.slice(0, 96);
+  write(`agents/${agent.slug}/index.html`, layout({
+    title: `${agent.name} Spreadsheet Finds | QC Photos and W2C Links`,
+    description: `Browse ${agent.name} spreadsheet finds with QC photos, W2C product links, item IDs, prices, sneakers, streetwear, and Nova Finds Go order routes.`,
+    canonical: `${config.siteUrl}/agents/${agent.slug}/`,
+    h1: `${agent.name} Spreadsheet Finds`,
+    content: `
+      ${searchIntentSection(agent.keyword, [`${agent.name} spreadsheet`, `${agent.name} QC photos`, `${agent.name} W2C links`])}
+      ${buyerProcessSection(`${agent.name} spreadsheet finds`)}
+      ${qcChecklistSection(agent.name)}
+      ${shopCtaSection}
+      ${loadMoreGrid(agentProducts)}
+      <section class="seo-copy"><h2>Related agent comparisons</h2>${internalLinkList([
+        { href: "/compare/oopbuy-vs-superbuy/", label: "Oopbuy vs Superbuy" },
+        { href: "/compare/kakobuy-vs-oopbuy/", label: "Kakobuy vs Oopbuy" },
+        { href: "/compare/best-agent-for-sneakers/", label: "Best agent for sneaker reps" },
+        { href: "/keywords/best-sneaker-reps-spreadsheet/", label: "Best sneaker reps spreadsheet" }
+      ])}</section>
+      ${faqSection()}
+    `,
+    schema: [schemaOrg("CollectionPage", { name: `${agent.name} Spreadsheet Finds`, about: agent.keyword }), faqSchema()]
+  }));
+  pageUrls.push(`/agents/${agent.slug}/`);
+});
+
+write("compare/index.html", layout({
+  title: "Agent Comparisons | Oopbuy, Superbuy and Kakobuy - qcfindgo",
+  description: "Compare Oopbuy, Superbuy, Kakobuy and other agent options for QC photos, W2C links, spreadsheet finds, shipping routes, and buyer workflows.",
+  canonical: `${config.siteUrl}/compare/`,
+  h1: "Agent Comparisons",
+  content: `
+    ${searchIntentSection("Agent comparison", ["Oopbuy vs Superbuy", "Kakobuy vs Oopbuy", "best agent for sneaker reps"])}
+    ${cardGrid(config.comparePages.map((page) => ({
+      href: `/compare/${page.slug}/`,
+      label: page.title,
+      meta: page.keyword,
+      image: productRecords[0]?.image,
+      alt: `${page.title} agent comparison`
+    })))}
+    ${priorityLinkSection}
+  `,
+  schema: schemaOrg("CollectionPage", { name: "Agent Comparisons" })
+}));
+pageUrls.push("/compare/");
+
+config.comparePages.forEach((page) => {
+  const agentSet = new Set(page.agents.map((agent) => slugify(agent)));
+  const items = productRecords
+    .filter((product) => agentEntries(product).some(([name]) => agentSet.has(slugify(name))))
+    .slice(0, 96);
+  const relatedProducts = items.length ? items : productRecords.slice(0, 96);
+  write(`compare/${page.slug}/index.html`, layout({
+    title: `${page.title} | Agent Comparison and QC Finder`,
+    description: page.description,
+    canonical: `${config.siteUrl}/compare/${page.slug}/`,
+    h1: `${page.title}: Agent Comparison`,
+    content: `
+      ${searchIntentSection(page.keyword, [page.keyword, `${page.title} QC photos`, `${page.title} spreadsheet`, `${page.title} W2C links`])}
+      <section class="seo-copy">
+        <h2>Quick comparison</h2>
+        <p>${escapeHtml(page.description)} Compare available product images, agent routing, seller details, service fees, shipping estimates, and final support before placing an order.</p>
+        <p>For a new site, this page helps capture lower-competition comparison searches while linking visitors back into product pages and Nova Finds Go order paths.</p>
+      </section>
+      ${buyerProcessSection(page.title)}
+      ${qcChecklistSection(page.title)}
+      ${shopCtaSection}
+      ${loadMoreGrid(relatedProducts)}
+      <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
+        { href: "/agents/oopbuy/", label: "Oopbuy spreadsheet finds" },
+        { href: "/agents/superbuy/", label: "Superbuy spreadsheet finds" },
+        { href: "/keywords/best-sneaker-reps-spreadsheet/", label: "Best sneaker reps spreadsheet" },
+        { href: "/blog/best-agents-for-sneaker-reps/", label: "Best agents for sneaker reps" }
+      ])}</section>
+      ${faqSection()}
+      ${trustSection}
+    `,
+    schema: [schemaOrg("Article", {
+      headline: `${page.title}: Agent Comparison`,
+      description: page.description,
+      author: { "@type": "Organization", name: "qcfindgo" },
+      datePublished: today,
+      dateModified: today
+    }), faqSchema()]
+  }));
+  pageUrls.push(`/compare/${page.slug}/`);
+});
+
 const keywordLandingPages = [
+  { slug: "qc-finder", title: "QC Finder", terms: ["sneaker"], fallback: "/finds/", description: "Use qcfindgo as a QC finder for sneaker reps, streetwear finds, W2C links, item IDs, prices, and Nova Finds Go order routes.", phrases: ["qcfin", "qcfindgo", "qc find", "QC finder"] },
+  { slug: "qc-finds", title: "QC Finds", terms: ["sneaker"], fallback: "/finds/", description: "Browse QC finds with product photos, spreadsheet-style discovery pages, W2C links, item IDs, prices, and agent-ready buying routes.", phrases: ["qcfinds", "qc finds", "qcfindes", "qcfinda"] },
+  { slug: "nike-qc", title: "Nike QC", terms: ["nike"], fallback: "/brands/nike/", description: "Review Nike QC photos for sneakers, hoodies, tees, item IDs, W2C links, prices, and Nova Finds Go product routes.", phrases: ["nike qc", "Nike QC photos", "Nike sneaker QC", "Nike reps QC"] },
+  { slug: "loro-piana-spreadsheet", title: "Loro Piana Spreadsheet", terms: ["loro piana"], fallback: "/brands/loro-piana/", description: "Browse Loro Piana spreadsheet finds with QC photos, item IDs, quiet luxury product notes, W2C links, and buying routes.", phrases: ["loro piana spreadsheet", "Loro Piana reps spreadsheet", "Loro Piana QC photos"] },
+  { slug: "bq-sneakers", title: "BQ Sneakers", terms: ["sneaker"], fallback: "/categories/sneakers/", description: "Compare BQ sneakers and sneaker QC finds with product photos, item IDs, prices, W2C links, and agent-ready routes.", phrases: ["bq sneakers", "BQ sneaker QC", "BQ shoes finds"] },
   { slug: "nike-sneaker-reps", title: "Nike Sneaker Reps", terms: ["nike", "sneaker"], fallback: "/brands/nike/", description: "Compare Nike sneaker reps with W2C links, QC photos, product IDs, prices, and buying routes." },
   { slug: "adidas-samba-reps", title: "Adidas Samba Reps", terms: ["adidas", "samba"], fallback: "/brands/adidas/", description: "Browse Adidas Samba reps, QC photos, W2C links, and similar Adidas sneaker finds." },
   { slug: "louis-vuitton-bag-reps", title: "Louis Vuitton Bag Reps", terms: ["louis vuitton", "bag"], fallback: "/brands/louis-vuitton/", description: "Find Louis Vuitton bag reps with QC photos, product IDs, W2C links, and buying options." },
@@ -775,11 +926,11 @@ const keywordLandingPages = [
 ];
 
 write("keywords/index.html", layout({
-  title: "Long-Tail Keywords | Reps Spreadsheet, W2C Finds and QC Photos",
-  description: "Browse long-tail keyword pages for Nike sneaker reps, Adidas Samba reps, Louis Vuitton bags, Dior sneakers, Gucci tees, QC photos, and W2C finds.",
+  title: "QC Finder Keywords | Nike QC, Spreadsheets and W2C Finds",
+  description: "Browse qcfindgo keyword pages for Nike QC, QC finds, Loro Piana spreadsheet, sneaker reps, W2C links, product IDs, and QC photos.",
   canonical: `${config.siteUrl}/keywords/`,
-  h1: "Long-Tail Keyword Pages",
-  content: `${shopCtaSection}${cardGrid(keywordLandingPages.map((page) => {
+  h1: "QC Finder Keyword Pages",
+  content: `${priorityLinkSection}${shopCtaSection}${cardGrid(keywordLandingPages.map((page) => {
     const items = searchProducts(page.terms, 12);
     return {
       href: `/keywords/${page.slug}/`,
@@ -812,16 +963,18 @@ keywordLandingPages.forEach((page) => {
     canonical: `${config.siteUrl}/keywords/${page.slug}/`,
     h1: `${page.title}: W2C Links and QC Photos`,
     content: `
+      ${searchIntentSection(page.title, page.phrases || [page.title, `${page.title} QC photos`, `${page.title} W2C links`])}
       <section class="seo-copy">
         <h2>${escapeHtml(page.title)} buying intent</h2>
         <p>${escapeHtml(page.description)} This page is built for shoppers comparing product photos, item IDs, prices, categories, and buying routes before choosing a product page.</p>
       </section>
       ${buyerProcessSection(page.title)}
-      ${qcChecklistSection(`${page.title} QC checklist`)}
+      ${qcChecklistSection(page.title)}
       ${shopCtaSection}
       ${loadMoreGrid(items)}
       <section class="seo-copy"><h2>Related pages</h2>${internalLinkList([
         { href: page.fallback, label: `Main ${page.title} page` },
+        ...gscPriorityLinks.filter((item) => item.href !== `/keywords/${page.slug}/`).slice(0, 3),
         { href: "/finds/", label: "Brand and category W2C finds" },
         { href: "/new-finds/", label: "New W2C finds" },
         { href: "/blog/how-to-use-a-reps-spreadsheet-safely/", label: "How to use a reps spreadsheet safely" }
@@ -979,6 +1132,14 @@ simplePages.forEach(([slug, title, description]) => {
 
 const keywordRows = [
   ["keyword","type","intent","target_page","priority","notes"],
+  ["qcfin","brand","navigational","/keywords/qc-finder/","high","Early GSC query; capture typo and brand discovery demand"],
+  ["qcfinds","brand","navigational","/keywords/qc-finds/","high","Early GSC query; connect to product discovery hub"],
+  ["qc finds","brand","navigational","/keywords/qc-finds/","high","Early GSC query; exact phrase landing page"],
+  ["qc find","brand","navigational","/keywords/qc-finder/","high","Early GSC query; exact phrase landing page"],
+  ["nike qc","long-tail","commercial","/keywords/nike-qc/","high","Early GSC query; route users to Nike product pages"],
+  ["loro piana spreadsheet","long-tail","commercial","/keywords/loro-piana-spreadsheet/","high","Early GSC query; quiet luxury spreadsheet page"],
+  ["bq sneakers","long-tail","commercial","/keywords/bq-sneakers/","medium","Early GSC query; sneaker discovery landing page"],
+  ["oopbuy vs superbuy","comparison","research","/compare/oopbuy-vs-superbuy/","high","Early GSC query; agent comparison landing page"],
   ["nike sneaker qc photos","brand","commercial","/brands/nike/","high","US and Europe sneaker discovery"],
   ["nike dunk low reps","long-tail","commercial","/keywords/nike-dunk-low-reps/","high","Dedicated keyword landing page"],
   ["adidas samba qc finder","brand","commercial","/brands/adidas/","high","Long-tail Adidas sneaker query"],
@@ -1015,21 +1176,30 @@ write("seo/seo-plan.md", `# qcfindgo SEO Execution Plan
 - Route: QC finder + streetwear product discovery + editorial guides
 
 ## 30-Day Priorities
-1. Verify Google Search Console and submit /sitemap.xml.
-2. Monitor indexing for homepage, brand pages, category pages, and product pages.
-3. Publish two English guides per week under /blog/.
-4. Improve product copy for top 100 products by clicks or impressions.
-5. Build social profiles and 5-10 safe citations after indexing begins.
+1. Keep /sitemap.xml submitted in Google Search Console after every product or SEO page update.
+2. Fix 404 URLs with redirects, then monitor the not-indexed report weekly.
+3. Strengthen pages already receiving impressions: qcfin, qcfinds, qc finds, nike qc, bq sneakers, loro piana spreadsheet, and oopbuy vs superbuy.
+4. Publish two English guides per week under /blog/ and add internal links to product pages.
+5. Improve product copy for top products by clicks, impressions, and Nova Finds Go order clicks.
+6. Build social profiles and 5-10 safe citations after indexing begins.
+
+## Current GSC Baseline
+- Indexed pages: 801
+- Not indexed pages: 1,011
+- Last visible 3-month performance: 15 clicks, 329 impressions, 4.6% CTR, 31.1 average position
+- Priority queries: qcfin, qcfinds, qc finds, nike qc, bq sneakers, loro piana spreadsheet, oopbuy vs superbuy
 
 ## Long-Tail Page Map
 - /finds/ is the discovery hub for brand + category combinations.
 - /new-finds/ highlights recently imported products so Google sees fresh crawl paths.
-- /keywords/ collects high-intent terms such as nike dunk low reps, best sneaker reps spreadsheet, rep shoes with QC photos, and W2C sneakers for US buyers.
+- /keywords/ collects high-intent terms such as qc finder, qc finds, nike qc, loro piana spreadsheet, bq sneakers, nike dunk low reps, best sneaker reps spreadsheet, and W2C sneakers for US buyers.
+- /compare/ targets lower-competition agent comparison searches such as Oopbuy vs Superbuy and Kakobuy vs Oopbuy.
+- /agents/ targets agent spreadsheet searches and links those visitors to product pages.
 - /qc-disclaimer/ explains the site's role as an independent QC finder and improves trust signals.
 
 ## Google Search Console Workflow
 - Resubmit https://qcfindgo.com/sitemap.xml after each product import or SEO generation.
-- Manually request indexing for the homepage, /new-finds/, /finds/nike-sneakers/, /keywords/nike-dunk-low-reps/, and /keywords/best-sneaker-reps-spreadsheet/.
+- Manually request indexing for the homepage, /new-finds/, /keywords/qc-finder/, /keywords/qc-finds/, /keywords/nike-qc/, /keywords/loro-piana-spreadsheet/, /compare/oopbuy-vs-superbuy/, and /keywords/best-sneaker-reps-spreadsheet/.
 - Wait 24-72 hours before judging coverage reports. GSC processing can lag even when live URL tests pass.
 
 ## Weekly Content Cadence

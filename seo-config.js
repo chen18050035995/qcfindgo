@@ -214,6 +214,42 @@ module.exports = {
       title: "Nike QC Finder Guide",
       keyword: "Nike QC",
       description: "Use this Nike QC finder guide to compare sneaker QC photos, shape checks, item IDs, W2C links, and Nova Finds Go order routes."
+    },
+    {
+      slug: "nike-shoes-qc-photo-guide",
+      title: "Nike Shoes QC Photo Guide for US and Europe Buyers",
+      keyword: "Nike shoes QC photos",
+      description: "Check Nike shoes QC photos for toe box shape, swoosh placement, heel tab, sole profile, sizing notes, item IDs, W2C links, and buying routes."
+    },
+    {
+      slug: "adidas-samba-qc-buying-checklist",
+      title: "Adidas Samba QC Buying Checklist",
+      keyword: "Adidas Samba QC",
+      description: "Use this Adidas Samba QC checklist to compare sole shape, stripes, stitching, sizing, QC photos, W2C links, item IDs, and agent-ready product pages."
+    },
+    {
+      slug: "dior-b30-qc-guide",
+      title: "Dior B30 QC Guide",
+      keyword: "Dior B30 QC",
+      description: "Review Dior B30 QC photos for panel shape, logo placement, toe shape, sole details, color tone, item IDs, W2C links, and buyer routes."
+    },
+    {
+      slug: "lv-bag-qc-photo-checklist",
+      title: "LV Bag QC Photo Checklist",
+      keyword: "LV bag QC",
+      description: "Compare LV bag QC photos for canvas alignment, stitching, hardware, logo placement, leather trim, item IDs, W2C links, and product routes."
+    },
+    {
+      slug: "gucci-shoes-qc-guide",
+      title: "Gucci Shoes QC Guide",
+      keyword: "Gucci shoes QC",
+      description: "Use this Gucci shoes QC guide to check materials, logo placement, stitching, sole profile, QC photos, item IDs, W2C links, and buyer routes."
+    },
+    {
+      slug: "best-qc-finds-for-europe-buyers",
+      title: "Best QC Finds for Europe Buyers",
+      keyword: "QC finds Europe buyers",
+      description: "Browse QC finds for Europe buyers across designer shoes, bags, hoodies, Nike, Adidas, LV, Dior, Gucci, W2C links, prices, and agent routes."
     }
   ]
 };

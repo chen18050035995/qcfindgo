@@ -250,6 +250,30 @@ module.exports = {
       title: "Best QC Finds for Europe Buyers",
       keyword: "QC finds Europe buyers",
       description: "Browse QC finds for Europe buyers across designer shoes, bags, hoodies, Nike, Adidas, LV, Dior, Gucci, W2C links, prices, and agent routes."
+    },
+    {
+      slug: "nike-dunk-low-qc-photos-guide",
+      title: "Nike Dunk Low QC Photos Guide",
+      keyword: "Nike Dunk Low QC photos",
+      description: "Use this Nike Dunk Low QC photos guide to check toe box shape, swoosh placement, heel tab, color blocking, sole details, item IDs, and W2C links."
+    },
+    {
+      slug: "dior-b30-w2c-and-qc-guide",
+      title: "Dior B30 W2C and QC Guide",
+      keyword: "Dior B30 W2C",
+      description: "Find Dior B30 W2C and QC tips for panel shape, logo placement, sole profile, sizing checks, product IDs, prices, and Nova Finds Go routes."
+    },
+    {
+      slug: "lv-bag-spreadsheet-qc-guide",
+      title: "LV Bag Spreadsheet QC Guide",
+      keyword: "LV bag spreadsheet",
+      description: "Review LV bag spreadsheet finds with QC photo tips for canvas alignment, stitching, hardware, logo placement, item IDs, W2C links, and product pages."
+    },
+    {
+      slug: "best-rep-shoes-for-us-buyers-guide",
+      title: "Best Rep Shoes for US Buyers Guide",
+      keyword: "best rep shoes for US buyers",
+      description: "Compare rep shoes for US buyers with QC photos, sizing notes, shipping route checks, W2C links, item IDs, prices, and agent-ready product pages."
     }
   ]
 };

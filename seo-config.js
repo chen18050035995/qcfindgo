@@ -298,6 +298,36 @@ module.exports = {
       title: "W2C Designer Shoes Guide",
       keyword: "W2C designer shoes",
       description: "Find W2C designer shoes with QC photo checks, brand comparisons, sizing notes, product IDs, prices, and Nova Finds Go buying routes."
+    },
+    {
+      slug: "reps-qc-photo-guide",
+      title: "Reps QC Photo Guide",
+      keyword: "reps QC",
+      description: "Use this reps QC photo guide to compare product images, seller item IDs, W2C links, prices, agent routes, and final order checks."
+    },
+    {
+      slug: "qc-hoodie-buying-guide",
+      title: "QC Hoodie Buying Guide",
+      keyword: "QC hoodie",
+      description: "Check QC hoodie photos for fit, logo placement, print quality, fabric texture, tag details, sizing, W2C links, and buyer routes."
+    },
+    {
+      slug: "qc-bags-price-and-photo-guide",
+      title: "QC Bags Price and Photo Guide",
+      keyword: "QC bag price",
+      description: "Compare QC bags by price, stitching, hardware, logo placement, leather or canvas texture, item IDs, W2C links, and Nova Finds Go routes."
+    },
+    {
+      slug: "goyard-bag-qc-guide",
+      title: "Goyard Bag QC Guide",
+      keyword: "Goyard bag QC",
+      description: "Review Goyard bag QC photos for print alignment, stitching, leather trim, handle shape, item IDs, W2C links, and buying routes."
+    },
+    {
+      slug: "qc-directory-guide",
+      title: "QC Directory Guide",
+      keyword: "QC directory",
+      description: "Use this QC directory guide to find QC photos, QC finds, sneaker pages, hoodie pages, bag pages, W2C links, and product IDs."
     }
   ]
 };

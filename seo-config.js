@@ -274,6 +274,30 @@ module.exports = {
       title: "Best Rep Shoes for US Buyers Guide",
       keyword: "best rep shoes for US buyers",
       description: "Compare rep shoes for US buyers with QC photos, sizing notes, shipping route checks, W2C links, item IDs, prices, and agent-ready product pages."
+    },
+    {
+      slug: "nike-tech-fleece-qc-guide",
+      title: "Nike Tech Fleece QC Guide",
+      keyword: "Nike Tech Fleece QC",
+      description: "Use this Nike Tech Fleece QC guide to check zipper details, panel shape, logo placement, fabric texture, sizing notes, item IDs, and W2C links."
+    },
+    {
+      slug: "lv-trainer-qc-guide",
+      title: "LV Trainer QC Guide",
+      keyword: "LV Trainer QC",
+      description: "Review LV Trainer QC photos for panel shape, monogram details, stitching, sole profile, color tone, item IDs, W2C links, and buyer routes."
+    },
+    {
+      slug: "designer-sneakers-spreadsheet-guide",
+      title: "Designer Sneakers Spreadsheet Guide",
+      keyword: "designer sneakers spreadsheet",
+      description: "Compare designer sneakers spreadsheet finds across LV, Dior, Gucci, Nike, Adidas, QC photos, W2C links, item IDs, prices, and buyer routes."
+    },
+    {
+      slug: "w2c-designer-shoes-guide",
+      title: "W2C Designer Shoes Guide",
+      keyword: "W2C designer shoes",
+      description: "Find W2C designer shoes with QC photo checks, brand comparisons, sizing notes, product IDs, prices, and Nova Finds Go buying routes."
     }
   ]
 };

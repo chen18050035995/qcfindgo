@@ -328,6 +328,30 @@ module.exports = {
       title: "QC Directory Guide",
       keyword: "QC directory",
       description: "Use this QC directory guide to find QC photos, QC finds, sneaker pages, hoodie pages, bag pages, W2C links, and product IDs."
+    },
+    {
+      slug: "qc-official-website-guide",
+      title: "QC Official Website Guide",
+      keyword: "QC official website",
+      description: "Use this QC official website guide to understand how qcfindgo organizes QC photos, W2C links, item IDs, category pages, and Nova Finds Go routes."
+    },
+    {
+      slug: "qc-pants-and-shorts-guide",
+      title: "QC Pants and Shorts Guide",
+      keyword: "QC pants",
+      description: "Check QC pants and shorts photos for fit, fabric texture, logo placement, pockets, tags, sizing, W2C links, item IDs, and buyer routes."
+    },
+    {
+      slug: "ysl-bag-qc-guide",
+      title: "YSL Bag QC Guide",
+      keyword: "YSL bag QC",
+      description: "Review YSL bag QC photos for leather texture, stitching, hardware, logo placement, strap shape, item IDs, W2C links, and buying routes."
+    },
+    {
+      slug: "sneaker-qc-finder-guide",
+      title: "Sneaker QC Finder Guide",
+      keyword: "sneaker QC finder",
+      description: "Use this sneaker QC finder guide to compare QC photos, shape details, sizing notes, item IDs, W2C links, prices, and product pages."
     }
   ]
 };

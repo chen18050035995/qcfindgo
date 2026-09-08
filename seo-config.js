@@ -9,6 +9,8 @@ module.exports = {
   agentPages: [
     { slug: "loongbuy", name: "LoongBuy", keyword: "LoongBuy spreadsheet" },
     { slug: "kakobuy", name: "Kakobuy", keyword: "Kakobuy spreadsheet" },
+    { slug: "mulebuy", name: "Mulebuy", keyword: "Mulebuy spreadsheet" },
+    { slug: "cnfans", name: "CNFans", keyword: "CNFans spreadsheet" },
     { slug: "oopbuy", name: "Oopbuy", keyword: "Oopbuy spreadsheet" },
     { slug: "allchinabuy", name: "AllChinaBuy", keyword: "AllChinaBuy spreadsheet" },
     { slug: "superbuy", name: "Superbuy", keyword: "Superbuy spreadsheet" },
@@ -39,6 +41,27 @@ module.exports = {
       keyword: "LoongBuy vs Superbuy",
       agents: ["Loongbuy", "Superbuy"],
       description: "Compare LoongBuy and Superbuy for sneaker reps, designer streetwear finds, QC photos, fees, and shipping choices."
+    },
+    {
+      slug: "kakobuy-vs-mulebuy",
+      title: "Kakobuy vs Mulebuy",
+      keyword: "Kakobuy vs Mulebuy",
+      agents: ["Kakobuy", "Mulebuy"],
+      description: "Compare Kakobuy and Mulebuy for spreadsheet finds, QC photos, W2C links, sneaker reps, hoodie finds, and US or Europe buyer routes."
+    },
+    {
+      slug: "oopbuy-vs-cnfans",
+      title: "Oopbuy vs CNFans",
+      keyword: "Oopbuy vs CNFans",
+      agents: ["Oopbuy", "CNFans"],
+      description: "Compare Oopbuy and CNFans for QC photos, spreadsheet product discovery, W2C links, agent-ready item pages, and buyer route checks."
+    },
+    {
+      slug: "acbuy-vs-allchinabuy",
+      title: "AcBuy vs AllChinaBuy",
+      keyword: "AcBuy vs AllChinaBuy",
+      agents: ["AcBuy", "AllChinaBuy"],
+      description: "Compare AcBuy and AllChinaBuy for QC photo workflow, spreadsheet finds, W2C links, shipping route checks, and product research."
     },
     {
       slug: "best-agent-for-sneakers",
@@ -352,6 +375,36 @@ module.exports = {
       title: "Sneaker QC Finder Guide",
       keyword: "sneaker QC finder",
       description: "Use this sneaker QC finder guide to compare QC photos, shape details, sizing notes, item IDs, W2C links, prices, and product pages."
+    },
+    {
+      slug: "cnfans-spreadsheet-qc-guide",
+      title: "CNFans Spreadsheet QC Guide",
+      keyword: "CNFans spreadsheet",
+      description: "Use this CNFans spreadsheet guide to compare QC photos, product IDs, W2C links, sneaker finds, hoodie finds, and Nova Finds Go order routes."
+    },
+    {
+      slug: "mulebuy-spreadsheet-qc-guide",
+      title: "Mulebuy Spreadsheet QC Guide",
+      keyword: "Mulebuy spreadsheet",
+      description: "Review Mulebuy spreadsheet finds with QC photo checks, item IDs, W2C links, product prices, agent route notes, and buyer workflow tips."
+    },
+    {
+      slug: "kakobuy-vs-mulebuy-guide",
+      title: "Kakobuy vs Mulebuy Guide",
+      keyword: "Kakobuy vs Mulebuy",
+      description: "Compare Kakobuy and Mulebuy for QC photos, spreadsheet product discovery, sneaker reps, streetwear finds, W2C links, and buyer routes."
+    },
+    {
+      slug: "oopbuy-vs-cnfans-guide",
+      title: "Oopbuy vs CNFans Guide",
+      keyword: "Oopbuy vs CNFans",
+      description: "Compare Oopbuy and CNFans for spreadsheet finds, QC photos, product IDs, W2C links, agent workflow, and Nova Finds Go buying routes."
+    },
+    {
+      slug: "best-agent-spreadsheet-keywords",
+      title: "Best Agent Spreadsheet Keywords",
+      keyword: "agent spreadsheet keywords",
+      description: "Use these agent spreadsheet keywords for Kakobuy, Mulebuy, CNFans, Oopbuy, Superbuy, Sugargoo, AcBuy, LoveGoBuy, QC photos, and W2C finds."
     }
   ]
 };

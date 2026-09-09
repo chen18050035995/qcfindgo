@@ -576,7 +576,11 @@ const shopCtaSection = `
   </section>`;
 
 const gscPriorityLinks = [
-  { href: "/keywords/qc-finder/", label: "qcfin / QC Finder" },
+  { href: "/keywords/qcfin/", label: "qcfin" },
+  { href: "/keywords/qcfinder/", label: "qcfinder" },
+  { href: "/keywords/qcfinda/", label: "qcfinda" },
+  { href: "/keywords/qcfindes/", label: "qcfindes" },
+  { href: "/keywords/qc-finder/", label: "QC Finder" },
   { href: "/keywords/qc-finds/", label: "QC Finds" },
   { href: "/keywords/nike-qc/", label: "Nike QC" },
   { href: "/keywords/nike-shoes-qc/", label: "Nike Shoes QC" },
@@ -913,6 +917,10 @@ config.comparePages.forEach((page) => {
 });
 
 const keywordLandingPages = [
+  { slug: "qcfin", title: "qcfin", terms: ["sneaker"], fallback: "/keywords/qc-finder/", description: "Use qcfin as a short search route for qcfindgo QC finder pages, QC photos, W2C links, item IDs, sneaker finds, hoodie finds, and Nova Finds Go order routes.", phrases: ["qcfin", "qcfindgo", "qc finder", "qc finds"] },
+  { slug: "qcfinder", title: "qcfinder", terms: ["sneaker"], fallback: "/keywords/qc-finder/", description: "Use qcfinder to reach qcfindgo product discovery pages with QC photos, W2C links, item IDs, prices, brand pages, category pages, and buying routes.", phrases: ["qcfinder", "qc finder", "QC finder website", "qcfindgo"] },
+  { slug: "qcfinda", title: "qcfinda", terms: ["sneaker"], fallback: "/keywords/qc-finds/", description: "Use qcfinda as a common search variant for qcfindgo QC finds, product photos, W2C links, item IDs, prices, sneaker pages, hoodie pages, and bag pages.", phrases: ["qcfinda", "qc finds", "qcfindgo", "QC finds website"] },
+  { slug: "qcfindes", title: "qcfindes", terms: ["sneaker"], fallback: "/keywords/qc-finds/", description: "Use qcfindes as a search variant for qcfindgo QC finds, QC photos, product IDs, W2C links, prices, category pages, and Nova Finds Go buying routes.", phrases: ["qcfindes", "qcfinds", "qc finds", "qcfindgo"] },
   { slug: "qc-finder", title: "QC Finder", terms: ["sneaker"], fallback: "/finds/", description: "Use qcfindgo as a QC finder for sneaker reps, streetwear finds, W2C links, item IDs, prices, and Nova Finds Go order routes.", phrases: ["qcfin", "qcfindgo", "qc find", "QC finder"] },
   { slug: "qc-finds", title: "QC Finds", terms: ["sneaker"], fallback: "/finds/", description: "Browse QC finds with product photos, spreadsheet-style discovery pages, W2C links, item IDs, prices, and agent-ready buying routes.", phrases: ["qcfinds", "qc finds", "qcfindes", "qcfinda"] },
   { slug: "nike-qc", title: "Nike QC", terms: ["nike"], fallback: "/brands/nike/", description: "Review Nike QC photos for sneakers, hoodies, tees, item IDs, W2C links, prices, and Nova Finds Go product routes.", phrases: ["nike qc", "Nike QC photos", "Nike sneaker QC", "Nike reps QC"] },
@@ -971,7 +979,9 @@ const keywordLandingPages = [
   { slug: "lovegobuy-spreadsheet", title: "LoveGoBuy Spreadsheet", terms: ["sneaker"], fallback: "/agents/lovegobuy/", description: "Browse LoveGoBuy spreadsheet finds with QC photos, product IDs, W2C links, prices, sneaker products, hoodie products, and buyer routes.", phrases: ["lovegobuy spreadsheet", "LoveGoBuy QC photos", "LoveGoBuy W2C links"] },
   { slug: "best-agent-spreadsheet", title: "Best Agent Spreadsheet", terms: ["sneaker"], fallback: "/agents/", description: "Compare the best agent spreadsheet pages for Kakobuy, Mulebuy, CNFans, Oopbuy, Superbuy, Sugargoo, AcBuy, QC photos, W2C links, and product IDs.", phrases: ["best agent spreadsheet", "agent spreadsheet", "reps agent spreadsheet", "QC agent spreadsheet"] },
   { slug: "loro-piana-spreadsheet", title: "Loro Piana Spreadsheet", terms: ["loro piana"], fallback: "/brands/loro-piana/", description: "Browse Loro Piana spreadsheet finds with QC photos, item IDs, quiet luxury product notes, W2C links, and buying routes.", phrases: ["loro piana spreadsheet", "Loro Piana reps spreadsheet", "Loro Piana QC photos"] },
+  { slug: "loro-piana-spreadsheet-qc-photos", title: "Loro Piana Spreadsheet QC Photos", terms: ["loro piana"], fallback: "/keywords/loro-piana-spreadsheet/", description: "Review Loro Piana spreadsheet QC photos for quiet luxury shoes, knitwear, bags, seller item IDs, W2C links, prices, and product routes.", phrases: ["loro piana spreadsheet", "Loro Piana QC photos", "Loro Piana spreadsheet QC"] },
   { slug: "bq-sneakers", title: "BQ Sneakers", terms: ["sneaker"], fallback: "/categories/sneakers/", description: "Compare BQ sneakers and sneaker QC finds with product photos, item IDs, prices, W2C links, and agent-ready routes.", phrases: ["bq sneakers", "BQ sneaker QC", "BQ shoes finds"] },
+  { slug: "bq-sneakers-qc-photos", title: "BQ Sneakers QC Photos", terms: ["sneaker"], fallback: "/keywords/bq-sneakers/", description: "Browse BQ sneakers QC photos with shape checks, item IDs, W2C links, prices, sneaker category pages, and Nova Finds Go product routes.", phrases: ["bq sneakers", "BQ sneakers QC photos", "BQ sneaker finds"] },
   { slug: "nike-sneaker-reps", title: "Nike Sneaker Reps", terms: ["nike", "sneaker"], fallback: "/brands/nike/", description: "Compare Nike sneaker reps with W2C links, QC photos, product IDs, prices, and buying routes." },
   { slug: "adidas-samba-reps", title: "Adidas Samba Reps", terms: ["adidas", "samba"], fallback: "/brands/adidas/", description: "Browse Adidas Samba reps, QC photos, W2C links, and similar Adidas sneaker finds." },
   { slug: "louis-vuitton-bag-reps", title: "Louis Vuitton Bag Reps", terms: ["louis vuitton", "bag"], fallback: "/brands/louis-vuitton/", description: "Find Louis Vuitton bag reps with QC photos, product IDs, W2C links, and buying options." },

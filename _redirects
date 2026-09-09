@@ -25,14 +25,14 @@ https://www.qcfindgo.com/* https://qcfindgo.com/:splat 301
 /guide/ /blog/ 301
 /guides/* /blog/:splat 301
 /guides/ /blog/ 301
-/qcfin /keywords/qc-finder/ 301
+/qcfin /keywords/qcfin/ 301
 /qcfind /keywords/qc-finder/ 301
 /qc-find /keywords/qc-finder/ 301
 /qc-finder /keywords/qc-finder/ 301
 /qcfinds /keywords/qc-finds/ 301
 /qc-finds /keywords/qc-finds/ 301
-/qcfinda /keywords/qc-finds/ 301
-/qcfindes /keywords/qc-finds/ 301
+/qcfinda /keywords/qcfinda/ 301
+/qcfindes /keywords/qcfindes/ 301
 /nike-qc /keywords/nike-qc/ 301
 /nike-shoes-qc /keywords/nike-shoes-qc/ 301
 /nike-hoodie-qc /keywords/nike-hoodie-qc/ 301
@@ -60,7 +60,7 @@ https://www.qcfindgo.com/* https://qcfindgo.com/:splat 301
 /qcfinde /keywords/qc-finder/ 301
 /qc-finde /keywords/qc-finder/ 301
 /qx-finder /keywords/qc-finder/ 301
-/qcfinder /keywords/qc-finder/ 301
+/qcfinder /keywords/qcfinder/ 301
 /findqc /keywords/qc-finder/ 301
 /fidnqc /keywords/qc-finder/ 301
 /qcfinds. /keywords/qc-finds/ 301
@@ -100,6 +100,8 @@ https://www.qcfindgo.com/* https://qcfindgo.com/:splat 301
 /ysl-bag-qc /keywords/ysl-bag-qc/ 301
 /ysl-qc-photos /keywords/ysl-bag-qc/ 301
 /loro-piana-qc /keywords/loro-piana-qc/ 301
+/loro-piana-spreadsheet-qc-photos /keywords/loro-piana-spreadsheet-qc-photos/ 301
+/bq-sneakers-qc-photos /keywords/bq-sneakers-qc-photos/ 301
 /sneaker-qc-finder /keywords/sneaker-qc-finder/ 301
 /designer-qc-picks /keywords/designer-pick/ 301
 /designer-picks /keywords/designer-pick/ 301

@@ -405,6 +405,24 @@ module.exports = {
       title: "Best Agent Spreadsheet Keywords",
       keyword: "agent spreadsheet keywords",
       description: "Use these agent spreadsheet keywords for Kakobuy, Mulebuy, CNFans, Oopbuy, Superbuy, Sugargoo, AcBuy, LoveGoBuy, QC photos, and W2C finds."
+    },
+    {
+      slug: "qcfindgo-brand-search-guide",
+      title: "qcfindgo Brand Search Guide",
+      keyword: "qcfindgo search",
+      description: "Use this qcfindgo brand search guide for qcfin, qcfinder, qcfinda, qcfindes, qc finds, QC photos, W2C links, item IDs, and product routes."
+    },
+    {
+      slug: "bq-sneakers-qc-photo-guide",
+      title: "BQ Sneakers QC Photo Guide",
+      keyword: "BQ sneakers",
+      description: "Compare BQ sneakers with QC photo checks, sneaker shape, sizing notes, item IDs, W2C links, prices, and Nova Finds Go buying routes."
+    },
+    {
+      slug: "loro-piana-spreadsheet-qc-photo-guide",
+      title: "Loro Piana Spreadsheet QC Photo Guide",
+      keyword: "Loro Piana spreadsheet",
+      description: "Review Loro Piana spreadsheet finds with QC photos, quiet luxury product notes, item IDs, W2C links, prices, and buyer routes."
     }
   ]
 };

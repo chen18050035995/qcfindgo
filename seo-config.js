@@ -423,6 +423,30 @@ module.exports = {
       title: "Loro Piana Spreadsheet QC Photo Guide",
       keyword: "Loro Piana spreadsheet",
       description: "Review Loro Piana spreadsheet finds with QC photos, quiet luxury product notes, item IDs, W2C links, prices, and buyer routes."
+    },
+    {
+      slug: "qc-finder-spreadsheet-guide",
+      title: "QC Finder Spreadsheet Guide",
+      keyword: "qc finder spreadsheet",
+      description: "Use this QC finder spreadsheet guide to compare QC photos, W2C links, item IDs, prices, brand pages, category pages, and Nova Finds Go order routes."
+    },
+    {
+      slug: "nike-qc-photos-guide",
+      title: "Nike QC Photos Guide",
+      keyword: "nike qc photos",
+      description: "Review Nike QC photos for sneakers, hoodies, tees, logo placement, shape checks, item IDs, W2C links, prices, and buyer routes."
+    },
+    {
+      slug: "loro-piana-w2c-guide",
+      title: "Loro Piana W2C Guide",
+      keyword: "loro piana w2c",
+      description: "Find Loro Piana W2C routes with spreadsheet-style product pages, QC photos, quiet luxury checks, item IDs, prices, and Nova Finds Go buying paths."
+    },
+    {
+      slug: "qc-brand-search-queries-guide",
+      title: "QC Brand Search Queries Guide",
+      keyword: "qcfindgo brand search",
+      description: "Turn qcfin, qcfinda, qcfindes, qcfinder, qcfinds, and related brand-search variants into clearer QC finder landing routes."
     }
   ]
 };

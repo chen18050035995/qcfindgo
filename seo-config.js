@@ -83,6 +83,34 @@ module.exports = {
       keyword: "best agent for Europe buyers",
       agents: ["Kakobuy", "Oopbuy", "CSSBuy", "Superbuy"],
       description: "Review agent options for Europe buyers comparing streetwear finds, QC photo policy, shipping route notes, and agent links."
+    },
+    {
+      slug: "cssbuy-vs-superbuy",
+      title: "CSSBuy vs Superbuy",
+      keyword: "CSSBuy vs Superbuy",
+      agents: ["CSSBuy", "Superbuy"],
+      description: "Compare CSSBuy and Superbuy for spreadsheet finds, QC photos, W2C links, service workflow, shipping routes, and buyer support."
+    },
+    {
+      slug: "allchinabuy-vs-superbuy",
+      title: "AllChinaBuy vs Superbuy",
+      keyword: "AllChinaBuy vs Superbuy",
+      agents: ["AllChinaBuy", "Superbuy"],
+      description: "Compare AllChinaBuy and Superbuy for sneaker reps, streetwear product research, QC photo workflow, W2C links, and buyer routes."
+    },
+    {
+      slug: "orientdig-vs-cnfans",
+      title: "Orientdig vs CNFans",
+      keyword: "Orientdig vs CNFans",
+      agents: ["Orientdig", "CNFans"],
+      description: "Compare Orientdig and CNFans for QC photo checks, spreadsheet-style product discovery, W2C links, item IDs, and agent-ready buying routes."
+    },
+    {
+      slug: "loongbuy-vs-kakobuy",
+      title: "LoongBuy vs Kakobuy",
+      keyword: "LoongBuy vs Kakobuy",
+      agents: ["LoongBuy", "Kakobuy"],
+      description: "Compare LoongBuy and Kakobuy for spreadsheet finds, sneaker QC photos, W2C links, streetwear products, and buyer workflow notes."
     }
   ],
   categoryLabels: {
@@ -447,6 +475,30 @@ module.exports = {
       title: "QC Brand Search Queries Guide",
       keyword: "qcfindgo brand search",
       description: "Turn qcfin, qcfinda, qcfindes, qcfinder, qcfinds, and related brand-search variants into clearer QC finder landing routes."
+    },
+    {
+      slug: "allchinabuy-spreadsheet-qc-guide",
+      title: "AllChinaBuy Spreadsheet QC Guide",
+      keyword: "AllChinaBuy spreadsheet",
+      description: "Use this AllChinaBuy spreadsheet guide to compare QC photos, W2C links, item IDs, prices, shipping notes, and Nova Finds Go product routes."
+    },
+    {
+      slug: "superbuy-spreadsheet-qc-guide",
+      title: "Superbuy Spreadsheet QC Guide",
+      keyword: "Superbuy spreadsheet",
+      description: "Review Superbuy spreadsheet finds with QC photos, sneaker pages, hoodie pages, W2C links, item IDs, prices, and buyer workflow notes."
+    },
+    {
+      slug: "cssbuy-vs-superbuy-guide",
+      title: "CSSBuy vs Superbuy Guide",
+      keyword: "CSSBuy vs Superbuy",
+      description: "Compare CSSBuy and Superbuy for QC photo workflow, W2C links, spreadsheet finds, shipping route checks, and US or Europe buyer decisions."
+    },
+    {
+      slug: "rep-agent-qc-photos-guide",
+      title: "Rep Agent QC Photos Guide",
+      keyword: "rep agent QC photos",
+      description: "Compare agent QC photo workflows across CNFans, Superbuy, CSSBuy, Oopbuy, AllChinaBuy, Kakobuy, Mulebuy, and Nova Finds Go product pages."
     }
   ]
 };

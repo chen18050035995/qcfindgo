@@ -113,25 +113,25 @@ module.exports = {
       description: "Compare LoongBuy and Kakobuy for spreadsheet finds, sneaker QC photos, W2C links, streetwear products, and buyer workflow notes."
     },
     {
-      slug: "cnfans-vs-superbuy",
-      title: "CNFans vs Superbuy",
-      keyword: "CNFans vs Superbuy",
-      agents: ["CNFans", "Superbuy"],
-      description: "Compare CNFans and Superbuy for sneaker spreadsheet finds, QC photo workflow, W2C links, shipping notes, and buyer route decisions."
+      slug: "allchinabuy-vs-cssbuy",
+      title: "AllChinaBuy vs CSSBuy",
+      keyword: "AllChinaBuy vs CSSBuy",
+      agents: ["AllChinaBuy", "CSSBuy"],
+      description: "Compare AllChinaBuy and CSSBuy for sneaker spreadsheet finds, QC photo workflow, W2C links, shipping notes, and buyer route decisions."
     },
     {
-      slug: "mulebuy-vs-superbuy",
-      title: "Mulebuy vs Superbuy",
-      keyword: "Mulebuy vs Superbuy",
-      agents: ["Mulebuy", "Superbuy"],
-      description: "Compare Mulebuy and Superbuy for sneaker reps, streetwear finds, QC photos, W2C links, shipping routes, and spreadsheet workflows."
+      slug: "orientdig-vs-superbuy",
+      title: "Orientdig vs Superbuy",
+      keyword: "Orientdig vs Superbuy",
+      agents: ["Orientdig", "Superbuy"],
+      description: "Compare Orientdig and Superbuy for sneaker reps, streetwear finds, QC photos, W2C links, shipping routes, and spreadsheet workflows."
     },
     {
-      slug: "acbuy-vs-cnfans",
-      title: "AcBuy vs CNFans",
-      keyword: "AcBuy vs CNFans",
-      agents: ["AcBuy", "CNFans"],
-      description: "Compare AcBuy and CNFans for agent QC photos, spreadsheet-style product discovery, sneaker W2C links, prices, and buyer notes."
+      slug: "acbuy-vs-oopbuy",
+      title: "AcBuy vs Oopbuy",
+      keyword: "AcBuy vs Oopbuy",
+      agents: ["AcBuy", "Oopbuy"],
+      description: "Compare AcBuy and Oopbuy for agent QC photos, spreadsheet-style product discovery, sneaker W2C links, prices, and buyer notes."
     },
     {
       slug: "sugargoo-vs-superbuy",
@@ -526,25 +526,25 @@ module.exports = {
       slug: "rep-agent-qc-photos-guide",
       title: "Rep Agent QC Photos Guide",
       keyword: "rep agent QC photos",
-      description: "Compare agent QC photo workflows across CNFans, Superbuy, CSSBuy, Oopbuy, AllChinaBuy, Kakobuy, Mulebuy, and Nova Finds Go product pages."
+      description: "Compare agent QC photo workflows across Superbuy, CSSBuy, Oopbuy, AllChinaBuy, Kakobuy, Sugargoo, LoveGoBuy, Orientdig, and Nova Finds Go product pages."
     },
     {
-      slug: "cnfans-sneaker-spreadsheet-guide",
-      title: "CNFans Sneaker Spreadsheet Guide",
-      keyword: "CNFans sneaker spreadsheet",
-      description: "Use this CNFans sneaker spreadsheet guide to compare QC photos, W2C links, item IDs, sneaker product pages, prices, and buyer routes."
+      slug: "allchinabuy-sneaker-spreadsheet-guide",
+      title: "AllChinaBuy Sneaker Spreadsheet Guide",
+      keyword: "AllChinaBuy sneaker spreadsheet",
+      description: "Use this AllChinaBuy sneaker spreadsheet guide to compare QC photos, W2C links, item IDs, sneaker product pages, prices, and buyer routes."
     },
     {
       slug: "best-agent-for-sneaker-qc-photos",
       title: "Best Agent for Sneaker QC Photos",
       keyword: "best agent for sneaker QC photos",
-      description: "Compare CNFans, Superbuy, CSSBuy, Oopbuy, AllChinaBuy, Kakobuy, and Mulebuy for sneaker QC photos, W2C links, and buyer workflow."
+      description: "Compare Superbuy, CSSBuy, Oopbuy, AllChinaBuy, Kakobuy, Sugargoo, LoveGoBuy, and Orientdig for sneaker QC photos, W2C links, and buyer workflow."
     },
     {
-      slug: "superbuy-vs-cnfans-guide",
-      title: "Superbuy vs CNFans Guide",
-      keyword: "Superbuy vs CNFans",
-      description: "Compare Superbuy and CNFans for sneaker spreadsheet finds, QC photo checks, W2C product links, shipping route notes, and buyer decisions."
+      slug: "orientdig-sneaker-spreadsheet-guide",
+      title: "Orientdig Sneaker Spreadsheet Guide",
+      keyword: "Orientdig sneaker spreadsheet",
+      description: "Compare Orientdig sneaker spreadsheet finds with QC photo checks, W2C product links, shipping route notes, and buyer decisions."
     },
     {
       slug: "sneaker-agent-spreadsheet-guide",

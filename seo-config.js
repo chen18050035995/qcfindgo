@@ -505,6 +505,24 @@ module.exports = {
       description: "Turn qcfin, qcfinda, qcfindes, qcfinder, qcfinds, and related brand-search variants into clearer QC finder landing routes."
     },
     {
+      slug: "evisu-jeans-qc-guide",
+      title: "Evisu Jeans QC Guide",
+      keyword: "Evisu jeans",
+      description: "Check Evisu jeans for denim wash, back-pocket graphics, stitching, patches, sizing, QC photos, item IDs, W2C links, and product routes."
+    },
+    {
+      slug: "supreme-hoodie-qc-guide",
+      title: "Supreme Hoodie QC Guide",
+      keyword: "Supreme hoodie",
+      description: "Review Supreme hoodie QC photos for box-logo placement, print quality, fabric weight, cuffs, seams, sizing notes, item IDs, and W2C links."
+    },
+    {
+      slug: "new-balance-sneaker-qc-guide",
+      title: "New Balance Sneaker QC Guide",
+      keyword: "New Balance QC",
+      description: "Review New Balance QC photos for silhouette, N-logo placement, mesh and suede texture, heel details, sole shape, sizing, item IDs, and W2C links."
+    },
+    {
       slug: "allchinabuy-spreadsheet-qc-guide",
       title: "AllChinaBuy Spreadsheet QC Guide",
       keyword: "AllChinaBuy spreadsheet",

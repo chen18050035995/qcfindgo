@@ -523,6 +523,24 @@ module.exports = {
       description: "Review New Balance QC photos for silhouette, N-logo placement, mesh and suede texture, heel details, sole shape, sizing, item IDs, and W2C links."
     },
     {
+      slug: "amiri-hoodie-qc-guide",
+      title: "Amiri Hoodie QC Guide",
+      keyword: "Amiri hoodie",
+      description: "Review Amiri hoodie QC photos for graphic placement, logo details, fabric weight, stitching, cuffs, sizing notes, item IDs, and W2C links."
+    },
+    {
+      slug: "moncler-puffer-jacket-qc-guide",
+      title: "Moncler Puffer Jacket QC Guide",
+      keyword: "Moncler puffer jacket",
+      description: "Check Moncler puffer jacket QC photos for badge placement, quilting, fill shape, zipper details, hood, fabric finish, sizing, item IDs, and W2C links."
+    },
+    {
+      slug: "new-balance-miu-miu-qc-guide",
+      title: "New Balance x Miu Miu QC Guide",
+      keyword: "New Balance x Miu Miu sneakers",
+      description: "Review New Balance x Miu Miu sneaker QC photos for shape, N-logo placement, suede and mesh texture, tongue, heel, sole, sizing, item IDs, and W2C links."
+    },
+    {
       slug: "allchinabuy-spreadsheet-qc-guide",
       title: "AllChinaBuy Spreadsheet QC Guide",
       keyword: "AllChinaBuy spreadsheet",
